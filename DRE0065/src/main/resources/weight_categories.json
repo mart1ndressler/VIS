@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Flyweight",
+    "minWeight": "56.7",
+    "maxWeight": "61.2"
+  },
+  {
+    "name": "Bantamweight",
+    "minWeight": "61.2",
+    "maxWeight": "65.8"
+  },
+  {
+    "name": "Featherweight",
+    "minWeight": "65.8",
+    "maxWeight": "70.3"
+  },
+  {
+    "name": "Lightweight",
+    "minWeight": "70.3",
+    "maxWeight": "77.1"
+  },
+  {
+    "name": "Welterweight",
+    "minWeight": "77.1",
+    "maxWeight": "83.9"
+  },
+  {
+    "name": "Middleweight",
+    "minWeight": "83.9",
+    "maxWeight": "93.0"
+  },
+  {
+    "name": "Light Heavyweight",
+    "minWeight": "93.0",
+    "maxWeight": "102.1"
+  },
+  {
+    "name": "Heavyweight",
+    "minWeight": "102.1",
+    "maxWeight": "120.2"
+  },
+  {
+    "name": "Super Heavyweight",
+    "minWeight": "120.2",
+    "maxWeight": "None"
+  }
+]

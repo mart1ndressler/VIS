@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <link rel="icon" href="/css_js/images/logo.png" type="image/png">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css_js/css/styles.css">
+    <meta name="_csrf" content="{{_csrf.token}}">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg d-flex justify-content-between">
+    <div class="d-flex align-items-center">
+        <a class="navbar-brand font-weight-bold" href="#" onclick="toggleInfo()">MMA Fighters</a>
+        <a class="btn btn-outline-secondary mx-2" th:href="@{/}">Main Page</a>
+        <a class="btn btn-outline-secondary mx-2" th:href="@{/database}">Database</a>
+    </div>
+
+    <div class="d-flex align-items-center">
+        <a class="btn btn-outline-secondary mx-2" href="/user">User Info</a>
+        <i class="bi bi-person-circle mx-2"></i>
+        <span class="font-weight-bold mx-2">Basic User</span>
+    </div>
+</nav>
+
+<div class="container mt-5 d-flex">
+    <div class="additional-info text-center">
+        <h1 class="additional-info">MMA Fighter Database</h1>
+        <div class="additional-info">
+            This APP was created as a VIS PROJECT!
+            This app is publicly accessible. Regular users can browse the content without logging in.
+            Fighters log in to view their fight history and pending offers.
+            Coaches can create fight offers, which fighters can accept or reject.
+            Admins manage the entire database, including CRUD operations.
+            Logged-in fighters can also manage their offers and track progress.
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>© 2024 MMA Database</p>
+    <p>Created by Martin Dressler, DRE0065</p>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="/css_js/js/app.js"></script>
+<script src="/css_js/js/filters.js"></script>
+</body>
+</html>
