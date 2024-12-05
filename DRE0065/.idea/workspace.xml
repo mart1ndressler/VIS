@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="50ec7ea3-47f4-455e-a638-599837271bb9" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitattributes" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mvnw" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mvnw.cmd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/App.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Controller/AuthController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Controller/CoachController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Controller/EventController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Controller/FightController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Controller/HomeController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Controller/MMAFightController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Controller/MMAFighterController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Controller/PreparationController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Controller/StatsController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Controller/WeightCategoryController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Model/Coach.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Model/Event.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Model/Fight.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Model/MMAFight.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Model/MMAFighter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Model/Preparation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Model/Stats.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Model/WeightCategory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Repository/CoachRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Repository/EventRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Repository/FightRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Repository/MMAFightRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Repository/MMAFighterRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Repository/PreparationRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Repository/StatsRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Repository/WeightCategoryRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/SecurityConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Service/CoachService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Service/EventService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Service/FightService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Service/MMAFightService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Service/MMAFighterService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Service/PreparationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Service/StatsService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/Service/WeightCategoryService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/dre0065/WebConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/coaches.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/events.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/fights.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mma_fighters.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mma_fights.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/preparations.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/css_js/css/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/css_js/images/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/css_js/js/CRUD.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/css_js/js/app.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/css_js/js/filters.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/css_js/js/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/stats.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/database.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/weight_categories.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="JavaScript File" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2pUiF6AYfoD7VJghCuffbhQi9Md" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Dre0065Application.executor&quot;: &quot;Run&quot;,
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.App.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.Dre0065Application.executor&quot;: &quot;Run&quot;,
+    &quot;deletionFromPopupRequiresConfirmation&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Loren/OneDrive/Dokumenty/School/VIS/week10/DRE0065/src/main&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Loren\OneDrive\Dokumenty\School\VIS\week10\DRE0065\src\main" />
+      <recent name="C:\Users\Loren\OneDrive\Dokumenty\School\VIS\week10\DRE0065\src\main\resources\templates" />
+      <recent name="C:\Users\Loren\OneDrive\Dokumenty\School\VIS\week10\DRE0065\src\main\resources\static\images" />
+      <recent name="C:\Users\Loren\OneDrive\Dokumenty\School\VIS\week10\DRE0065\src\main\resources\static" />
+      <recent name="C:\Users\Loren\OneDrive\Dokumenty\School\VIS\week10\DRE0065\src\main\java\org\dre0065" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Loren\OneDrive\Dokumenty\School\VIS\week10\DRE0065\src\main\resources\static\css_js" />
+      <recent name="C:\Users\Loren\OneDrive\Dokumenty\School\VIS\week10\DRE0065\src\main\resources\static\css_js\css" />
+      <recent name="C:\Users\Loren\OneDrive\Dokumenty\School\VIS\week10\DRE0065\src\main\resources" />
+      <recent name="C:\Users\Loren\OneDrive\Dokumenty\School\VIS\week10\DRE0065\src\main\resources\static" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.dre0065.Controller" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="App" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="DRE0065" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="org.dre0065.App" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.dre0065.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.App" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.21565.193" />
+        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-IU-243.21565.193" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="50ec7ea3-47f4-455e-a638-599837271bb9" name="Changes" comment="" />
+      <created>1732826948267</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1732826948267</updated>
+      <workItem from="1732826949274" duration="1207000" />
+      <workItem from="1732828170632" duration="6597000" />
+      <workItem from="1732836537720" duration="12444000" />
+      <workItem from="1732873572646" duration="264000" />
+      <workItem from="1732873848220" duration="287000" />
+      <workItem from="1732874150903" duration="1807000" />
+      <workItem from="1732876277861" duration="10686000" />
+      <workItem from="1732889218484" duration="40809000" />
+      <workItem from="1732957724074" duration="55760000" />
+      <workItem from="1733172311054" duration="31000" />
+      <workItem from="1733172605696" duration="5000" />
+      <workItem from="1733239232067" duration="26407000" />
+      <workItem from="1733277436077" duration="17000" />
+      <workItem from="1733299332010" duration="3913000" />
+      <workItem from="1733303320869" duration="54421000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
