@@ -1,0 +1,133 @@
+html, body{
+    height: 100%;
+    margin: 0;
+}
+body{
+    background-color: #f7f7f7;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    text-align: center;
+}
+.additional-info{
+    text-align: center;
+    display: none;
+    font-size: 15px;
+    margin-top: 50px;
+}
+.navbar{
+    border: 1px solid black;
+    background-color: white;
+}
+.navbar a{
+    color: black;
+    font-weight: bold;
+    font-size: 25px;
+}
+.navbar .btn{
+    font-size: 16px;
+    font-weight: bold;
+    border: 1px solid black;
+}
+.navbar .bi-person-circle{
+    font-size: 1.8rem;
+    color: black;
+}
+.container.mt-5.d-flex{
+    justify-content: center;
+    align-items: center;
+    height: 65vh;
+}
+.additional-info.text-center{
+    border: 1px solid;
+    padding: 20px 20px 50px 20px;
+    box-shadow: 5px 10px 8px 10px #888888;
+}
+.additional-info.text-center h1{
+    font-size: 40px;
+    font-weight: bold;
+}
+.additional-info.text-center div{
+    font-size: 24px;
+}
+.mx-2{
+    color: black;
+}
+table{
+    margin: 20px 0;
+    border-collapse: collapse;
+}
+td, th{
+    text-align: center;
+    border: 1px solid #ddd;
+}
+th{
+    background-color: #f1f1f1;
+    font-size: 15px;
+}
+td{
+    font-size: 14px;
+}
+footer{
+    text-align: center;
+    padding: 10px 0;
+    border: 1px solid black;
+    bottom: 0;
+    width: 100%;
+    margin-top: auto;
+}
+footer p{
+    margin: 5px;
+    color: black;
+    font-weight: bold;
+    font-size: 18px;
+}
+.mb-3{
+    margin-top: 15px;
+}
+.h4_header{
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+}
+#mma-fighter-filters, #stats-filters{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#mma-fighter-filter-form, #stats-filter-form{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border: 3px solid #ddd;
+    border-radius: 60px;
+    background-color: #f9f9f9;
+}
+#weight-category-filter, #nationality-filter, #name-filter::placeholder, .form-control::placeholder{
+    color: black;
+}
+#mma-fighter-filters{
+    width: 35%;
+}
+#stats-filters{
+    width: 30%;
+}
+.bttns{
+    text-decoration: none;
+    color: inherit;
+}
+.bttns i{
+    font-size: 20px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+.bttns:hover i{
+    transform: scale(1.1);
+    color: black;
+}
+.form-group{
+    text-align: left;
+}

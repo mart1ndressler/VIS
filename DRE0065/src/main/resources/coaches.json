@@ -1,0 +1,102 @@
+[
+  {
+    "firstName": "Greg",
+    "lastName": "Jackson",
+    "specialization": "MMA Strategy"
+  },
+  {
+    "firstName": "Firas",
+    "lastName": "Zahabi",
+    "specialization": "Jiu-Jitsu"
+  },
+  {
+    "firstName": "Rafael",
+    "lastName": "Cordeiro",
+    "specialization": "Muay Thai"
+  },
+  {
+    "firstName": "Mark",
+    "lastName": "DellaGrotte",
+    "specialization": "Kickboxing"
+  },
+  {
+    "firstName": "Javier",
+    "lastName": "Mendez",
+    "specialization": "MMA"
+  },
+  {
+    "firstName": "John",
+    "lastName": "Kavanagh",
+    "specialization": "Jiu-Jitsu"
+  },
+  {
+    "firstName": "Mike",
+    "lastName": "Winkeljohn",
+    "specialization": "Striking"
+  },
+  {
+    "firstName": "Henri",
+    "lastName": "Hooft",
+    "specialization": "Kickboxing"
+  },
+  {
+    "firstName": "Andre",
+    "lastName": "Pederneiras",
+    "specialization": "Jiu-Jitsu"
+  },
+  {
+    "firstName": "Ray",
+    "lastName": "Longo",
+    "specialization": "Boxing"
+  },
+  {
+    "firstName": "Eddie",
+    "lastName": "Cha",
+    "specialization": "Wrestling"
+  },
+  {
+    "firstName": "Duane",
+    "lastName": "Ludwig",
+    "specialization": "Kickboxing"
+  },
+  {
+    "firstName": "Matt",
+    "lastName": "Hume",
+    "specialization": "MMA"
+  },
+  {
+    "firstName": "Erik",
+    "lastName": "Paulson",
+    "specialization": "Catch Wrestling"
+  },
+  {
+    "firstName": "Renzo",
+    "lastName": "Gracie",
+    "specialization": "Jiu-Jitsu"
+  },
+  {
+    "firstName": "Freddie",
+    "lastName": "Roach",
+    "specialization": "Boxing"
+  },
+  {
+    "firstName": "Pat",
+    "lastName": "Miletich",
+    "specialization": "MMA"
+  },
+  {
+    "firstName": "Rob",
+    "lastName": "Kaman",
+    "specialization": "Kickboxing"
+  },
+  {
+    "firstName": "Ricardo",
+    "lastName": "Liborio",
+    "specialization": "Jiu-Jitsu"
+  },
+  {
+    "firstName": "Greg",
+    "lastName": "Nelson",
+    "specialization": "MMA"
+  }
+]
