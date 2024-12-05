@@ -1,0 +1,1003 @@
+[
+  {
+    "wins": 25,
+    "losses": 4,
+    "draws": 1,
+    "kos": 12,
+    "tkos": 3,
+    "submissions": 8,
+    "decisions": 7,
+    "mma-fighter": {
+      "first_name": "ALEXANDRE",
+      "last_name": "PANTOJA"
+    }
+  },
+  {
+    "wins": 23,
+    "losses": 4,
+    "draws": 0,
+    "kos": 10,
+    "tkos": 5,
+    "submissions": 6,
+    "decisions": 7,
+    "mma-fighter": {
+      "first_name": "ALEXANDER",
+      "last_name": "VOLKANOVSKI"
+    }
+  },
+  {
+    "wins": 18,
+    "losses": 2,
+    "draws": 0,
+    "kos": 7,
+    "tkos": 4,
+    "submissions": 6,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "DRICUS",
+      "last_name": "DU PLESSIS"
+    }
+  },
+  {
+    "wins": 12,
+    "losses": 3,
+    "draws": 0,
+    "kos": 9,
+    "tkos": 2,
+    "submissions": 1,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "TOM",
+      "last_name": "ASPINALL"
+    }
+  },
+  {
+    "wins": 14,
+    "losses": 2,
+    "draws": 0,
+    "kos": 8,
+    "tkos": 3,
+    "submissions": 2,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "JACK",
+      "last_name": "DELLA MADDALENA"
+    }
+  },
+  {
+    "wins": 21,
+    "losses": 8,
+    "draws": 1,
+    "kos": 11,
+    "tkos": 5,
+    "submissions": 7,
+    "decisions": 8,
+    "mma-fighter": {
+      "first_name": "CHARLES",
+      "last_name": "OLIVEIRA"
+    }
+  },
+  {
+    "wins": 25,
+    "losses": 9,
+    "draws": 0,
+    "kos": 12,
+    "tkos": 4,
+    "submissions": 5,
+    "decisions": 13,
+    "mma-fighter": {
+      "first_name": "DUSTIN",
+      "last_name": "POIRIER"
+    }
+  },
+  {
+    "wins": 27,
+    "losses": 1,
+    "draws": 0,
+    "kos": 15,
+    "tkos": 5,
+    "submissions": 6,
+    "decisions": 6,
+    "mma-fighter": {
+      "first_name": "JON",
+      "last_name": "JONES"
+    }
+  },
+  {
+    "wins": 13,
+    "losses": 2,
+    "draws": 0,
+    "kos": 8,
+    "tkos": 3,
+    "submissions": 2,
+    "decisions": 2,
+    "mma-fighter": {
+      "first_name": "KHAMZAT",
+      "last_name": "CHIMAEV"
+    }
+  },
+  {
+    "wins": 21,
+    "losses": 3,
+    "draws": 0,
+    "kos": 11,
+    "tkos": 4,
+    "submissions": 4,
+    "decisions": 6,
+    "mma-fighter": {
+      "first_name": "ISRAEL",
+      "last_name": "ADESANYA"
+    }
+  },
+  {
+    "wins": 17,
+    "losses": 7,
+    "draws": 0,
+    "kos": 9,
+    "tkos": 2,
+    "submissions": 3,
+    "decisions": 6,
+    "mma-fighter": {
+      "first_name": "LEON",
+      "last_name": "EDWARDS"
+    }
+  },
+  {
+    "wins": 18,
+    "losses": 7,
+    "draws": 1,
+    "kos": 8,
+    "tkos": 3,
+    "submissions": 4,
+    "decisions": 11,
+    "mma-fighter": {
+      "first_name": "ISLAM",
+      "last_name": "MAKHACHEV"
+    }
+  },
+  {
+    "wins": 23,
+    "losses": 2,
+    "draws": 1,
+    "kos": 13,
+    "tkos": 4,
+    "submissions": 3,
+    "decisions": 6,
+    "mma-fighter": {
+      "first_name": "SERGEI",
+      "last_name": "PAVLOVICH"
+    }
+  },
+  {
+    "wins": 15,
+    "losses": 3,
+    "draws": 0,
+    "kos": 12,
+    "tkos": 2,
+    "submissions": 1,
+    "decisions": 0,
+    "mma-fighter": {
+      "first_name": "COLBY",
+      "last_name": "COVINGTON"
+    }
+  },
+  {
+    "wins": 16,
+    "losses": 4,
+    "draws": 0,
+    "kos": 5,
+    "tkos": 4,
+    "submissions": 3,
+    "decisions": 4,
+    "mma-fighter": {
+      "first_name": "JIRI",
+      "last_name": "PROCHAZKA"
+    }
+  },
+  {
+    "wins": 28,
+    "losses": 5,
+    "draws": 0,
+    "kos": 9,
+    "tkos": 3,
+    "submissions": 7,
+    "decisions": 12,
+    "mma-fighter": {
+      "first_name": "BRANDON",
+      "last_name": "MORENO"
+    }
+  },
+  {
+    "wins": 19,
+    "losses": 4,
+    "draws": 1,
+    "kos": 7,
+    "tkos": 2,
+    "submissions": 5,
+    "decisions": 9,
+    "mma-fighter": {
+      "first_name": "DEIVESON",
+      "last_name": "FIGUEIREDO"
+    }
+  },
+  {
+    "wins": 18,
+    "losses": 5,
+    "draws": 0,
+    "kos": 9,
+    "tkos": 3,
+    "submissions": 2,
+    "decisions": 9,
+    "mma-fighter": {
+      "first_name": "CORY",
+      "last_name": "SANDHAGEN"
+    }
+  },
+  {
+    "wins": 14,
+    "losses": 4,
+    "draws": 0,
+    "kos": 5,
+    "tkos": 2,
+    "submissions": 6,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "PETR",
+      "last_name": "YAN"
+    }
+  },
+  {
+    "wins": 15,
+    "losses": 3,
+    "draws": 1,
+    "kos": 8,
+    "tkos": 1,
+    "submissions": 5,
+    "decisions": 5,
+    "mma-fighter": {
+      "first_name": "CALVIN",
+      "last_name": "KATTAR"
+    }
+  },
+  {
+    "wins": 21,
+    "losses": 7,
+    "draws": 0,
+    "kos": 12,
+    "tkos": 4,
+    "submissions": 3,
+    "decisions": 2,
+    "mma-fighter": {
+      "first_name": "GIGA",
+      "last_name": "CHIKADZE"
+    }
+  },
+  {
+    "wins": 18,
+    "losses": 7,
+    "draws": 0,
+    "kos": 11,
+    "tkos": 2,
+    "submissions": 4,
+    "decisions": 5,
+    "mma-fighter": {
+      "first_name": "BENIEL",
+      "last_name": "DARIUSH"
+    }
+  },
+  {
+    "wins": 20,
+    "losses": 9,
+    "draws": 0,
+    "kos": 8,
+    "tkos": 4,
+    "submissions": 3,
+    "decisions": 5,
+    "mma-fighter": {
+      "first_name": "RAFAEL",
+      "last_name": "FIZIEV"
+    }
+  },
+  {
+    "wins": 18,
+    "losses": 5,
+    "draws": 0,
+    "kos": 10,
+    "tkos": 3,
+    "submissions": 2,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "STEPHEN",
+      "last_name": "THOMPSON"
+    }
+  },
+  {
+    "wins": 16,
+    "losses": 3,
+    "draws": 0,
+    "kos": 7,
+    "tkos": 2,
+    "submissions": 4,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "BRYAN",
+      "last_name": "BARBERENA"
+    }
+  },
+  {
+    "wins": 14,
+    "losses": 4,
+    "draws": 0,
+    "kos": 6,
+    "tkos": 2,
+    "submissions": 4,
+    "decisions": 2,
+    "mma-fighter": {
+      "first_name": "DEREK",
+      "last_name": "BRUNSON"
+    }
+  },
+  {
+    "wins": 17,
+    "losses": 5,
+    "draws": 0,
+    "kos": 8,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "JACK",
+      "last_name": "HERMANSSON"
+    }
+  },
+  {
+    "wins": 19,
+    "losses": 6,
+    "draws": 0,
+    "kos": 9,
+    "tkos": 3,
+    "submissions": 4,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "JAN",
+      "last_name": "BLACHOWICZ"
+    }
+  },
+  {
+    "wins": 15,
+    "losses": 4,
+    "draws": 0,
+    "kos": 7,
+    "tkos": 2,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "MAGOMED",
+      "last_name": "ANKALAEV"
+    }
+  },
+  {
+    "wins": 16,
+    "losses": 5,
+    "draws": 0,
+    "kos": 8,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 2,
+    "mma-fighter": {
+      "first_name": "CURTIS",
+      "last_name": "BLAYDES"
+    }
+  },
+  {
+    "wins": 18,
+    "losses": 6,
+    "draws": 0,
+    "kos": 9,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "TOM",
+      "last_name": "DUQUESNOY"
+    }
+  },
+  {
+    "wins": 14,
+    "losses": 4,
+    "draws": 0,
+    "kos": 6,
+    "tkos": 2,
+    "submissions": 4,
+    "decisions": 2,
+    "mma-fighter": {
+      "first_name": "MARC",
+      "last_name": "DIKAISE"
+    }
+  },
+  {
+    "wins": 17,
+    "losses": 5,
+    "draws": 0,
+    "kos": 8,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "VICENTE",
+      "last_name": "LUQUE"
+    }
+  },
+  {
+    "wins": 19,
+    "losses": 6,
+    "draws": 0,
+    "kos": 9,
+    "tkos": 3,
+    "submissions": 4,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "BRAD",
+      "last_name": "RIDDELL"
+    }
+  },
+  {
+    "wins": 15,
+    "losses": 4,
+    "draws": 0,
+    "kos": 7,
+    "tkos": 2,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "ROBERT",
+      "last_name": "WHITTAKER"
+    }
+  },
+  {
+    "wins": 16,
+    "losses": 5,
+    "draws": 0,
+    "kos": 8,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 2,
+    "mma-fighter": {
+      "first_name": "JACK",
+      "last_name": "SHORE"
+    }
+  },
+  {
+    "wins": 18,
+    "losses": 6,
+    "draws": 0,
+    "kos": 9,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "SAID",
+      "last_name": "NURMAGOMEDOV"
+    }
+  },
+  {
+    "wins": 14,
+    "losses": 4,
+    "draws": 0,
+    "kos": 6,
+    "tkos": 2,
+    "submissions": 4,
+    "decisions": 2,
+    "mma-fighter": {
+      "first_name": "ARNOLD",
+      "last_name": "ALLEN"
+    }
+  },
+  {
+    "wins": 17,
+    "losses": 5,
+    "draws": 0,
+    "kos": 8,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "JOSH",
+      "last_name": "EMMETT"
+    }
+  },
+  {
+    "wins": 19,
+    "losses": 6,
+    "draws": 0,
+    "kos": 9,
+    "tkos": 3,
+    "submissions": 4,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "DAN",
+      "last_name": "HOOKER"
+    }
+  },
+  {
+    "wins": 15,
+    "losses": 4,
+    "draws": 0,
+    "kos": 7,
+    "tkos": 2,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "MATHEUS",
+      "last_name": "GAMROT"
+    }
+  },
+  {
+    "wins": 16,
+    "losses": 5,
+    "draws": 0,
+    "kos": 8,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 2,
+    "mma-fighter": {
+      "first_name": "GILBERT",
+      "last_name": "BURNS"
+    }
+  },
+  {
+    "wins": 18,
+    "losses": 6,
+    "draws": 0,
+    "kos": 9,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "BELAL",
+      "last_name": "MUHAMMAD"
+    }
+  },
+  {
+    "wins": 14,
+    "losses": 4,
+    "draws": 0,
+    "kos": 6,
+    "tkos": 2,
+    "submissions": 4,
+    "decisions": 2,
+    "mma-fighter": {
+      "first_name": "DEREK",
+      "last_name": "LEWIS"
+    }
+  },
+  {
+    "wins": 17,
+    "losses": 5,
+    "draws": 0,
+    "kos": 8,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "STIPE",
+      "last_name": "MIOCIC"
+    }
+  },
+  {
+    "wins": 19,
+    "losses": 6,
+    "draws": 0,
+    "kos": 9,
+    "tkos": 3,
+    "submissions": 4,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "MARLON",
+      "last_name": "VERA"
+    }
+  },
+  {
+    "wins": 15,
+    "losses": 4,
+    "draws": 0,
+    "kos": 7,
+    "tkos": 2,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "OMAR",
+      "last_name": "MORALES"
+    }
+  },
+  {
+    "wins": 16,
+    "losses": 5,
+    "draws": 0,
+    "kos": 8,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 2,
+    "mma-fighter": {
+      "first_name": "LUKE",
+      "last_name": "ROCKHOLD"
+    }
+  },
+  {
+    "wins": 18,
+    "losses": 6,
+    "draws": 0,
+    "kos": 9,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "ANDREI",
+      "last_name": "ARLOVSKI"
+    }
+  },
+  {
+    "wins": 14,
+    "losses": 4,
+    "draws": 0,
+    "kos": 6,
+    "tkos": 2,
+    "submissions": 4,
+    "decisions": 2,
+    "mma-fighter": {
+      "first_name": "SERGIO",
+      "last_name": "PEREZ"
+    }
+  },
+  {
+    "wins": 17,
+    "losses": 5,
+    "draws": 0,
+    "kos": 8,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "BRYAN",
+      "last_name": "ORTEGA"
+    }
+  },
+  {
+    "wins": 19,
+    "losses": 6,
+    "draws": 0,
+    "kos": 9,
+    "tkos": 3,
+    "submissions": 4,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "EDSON",
+      "last_name": "BARBOZA"
+    }
+  },
+  {
+    "wins": 15,
+    "losses": 4,
+    "draws": 0,
+    "kos": 7,
+    "tkos": 2,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "TIAGO",
+      "last_name": "SANTOS"
+    }
+  },
+  {
+    "wins": 16,
+    "losses": 5,
+    "draws": 0,
+    "kos": 8,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 2,
+    "mma-fighter": {
+      "first_name": "PAUL",
+      "last_name": "CRAIG"
+    }
+  },
+  {
+    "wins": 18,
+    "losses": 6,
+    "draws": 0,
+    "kos": 9,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "JARED",
+      "last_name": "CANNONIER"
+    }
+  },
+  {
+    "wins": 14,
+    "losses": 4,
+    "draws": 0,
+    "kos": 6,
+    "tkos": 2,
+    "submissions": 4,
+    "decisions": 2,
+    "mma-fighter": {
+      "first_name": "ALEX",
+      "last_name": "MURPHY"
+    }
+  },
+  {
+    "wins": 17,
+    "losses": 5,
+    "draws": 0,
+    "kos": 8,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "KELVIN",
+      "last_name": "GASTELUM"
+    }
+  },
+  {
+    "wins": 19,
+    "losses": 6,
+    "draws": 0,
+    "kos": 9,
+    "tkos": 3,
+    "submissions": 4,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "FRANCIS",
+      "last_name": "NGANNOU"
+    }
+  },
+  {
+    "wins": 15,
+    "losses": 4,
+    "draws": 0,
+    "kos": 7,
+    "tkos": 2,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "CORYS",
+      "last_name": "SANDHAGENSON"
+    }
+  },
+  {
+    "wins": 15,
+    "losses": 4,
+    "draws": 0,
+    "kos": 7,
+    "tkos": 2,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "BRYAN",
+      "last_name": "BATTLE"
+    }
+  },
+  {
+    "wins": 16,
+    "losses": 5,
+    "draws": 0,
+    "kos": 8,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 2,
+    "mma-fighter": {
+      "first_name": "RAFAEL",
+      "last_name": "DOS ANJOS"
+    }
+  },
+  {
+    "wins": 18,
+    "losses": 6,
+    "draws": 0,
+    "kos": 9,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "NATE",
+      "last_name": "DIAZ"
+    }
+  },
+  {
+    "wins": 16,
+    "losses": 10,
+    "draws": 0,
+    "kos": 9,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "BRANDON",
+      "last_name": "CAIRO"
+    }
+  },
+  {
+    "wins": 14,
+    "losses": 4,
+    "draws": 0,
+    "kos": 6,
+    "tkos": 2,
+    "submissions": 4,
+    "decisions": 2,
+    "mma-fighter": {
+      "first_name": "RYAN",
+      "last_name": "BADER"
+    }
+  },
+  {
+    "wins": 17,
+    "losses": 5,
+    "draws": 0,
+    "kos": 8,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "DERRICK",
+      "last_name": "LEWIS"
+    }
+  },
+  {
+    "wins": 19,
+    "losses": 6,
+    "draws": 0,
+    "kos": 9,
+    "tkos": 3,
+    "submissions": 4,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "JIM",
+      "last_name": "MILLER"
+    }
+  },
+  {
+    "wins": 15,
+    "losses": 4,
+    "draws": 0,
+    "kos": 7,
+    "tkos": 2,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "BEN",
+      "last_name": "ASKREN"
+    }
+  },
+  {
+    "wins": 16,
+    "losses": 5,
+    "draws": 0,
+    "kos": 8,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 2,
+    "mma-fighter": {
+      "first_name": "YAIR",
+      "last_name": "RODRIGUEZ"
+    }
+  },
+  {
+    "wins": 18,
+    "losses": 6,
+    "draws": 0,
+    "kos": 9,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "CALVIN",
+      "last_name": "KATTAR"
+    }
+  },
+  {
+    "wins": 26,
+    "losses": 10,
+    "draws": 0,
+    "kos": 9,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "JOSE",
+      "last_name": "ALDO"
+    }
+  },
+  {
+    "wins": 15,
+    "losses": 4,
+    "draws": 0,
+    "kos": 5,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "TOM",
+      "last_name": "BLUEVAN"
+    }
+  },
+  {
+    "wins": 14,
+    "losses": 4,
+    "draws": 0,
+    "kos": 6,
+    "tkos": 2,
+    "submissions": 4,
+    "decisions": 2,
+    "mma-fighter": {
+      "first_name": "MARCUS",
+      "last_name": "DAVIS"
+    }
+  },
+  {
+    "wins": 17,
+    "losses": 5,
+    "draws": 0,
+    "kos": 8,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "RICK",
+      "last_name": "STORY"
+    }
+  },
+  {
+    "wins": 19,
+    "losses": 6,
+    "draws": 0,
+    "kos": 9,
+    "tkos": 3,
+    "submissions": 4,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "DONALD",
+      "last_name": "CERRONE"
+    }
+  },
+  {
+    "wins": 15,
+    "losses": 4,
+    "draws": 0,
+    "kos": 7,
+    "tkos": 2,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "DAMIAN",
+      "last_name": "MAIA"
+    }
+  },
+  {
+    "wins": 16,
+    "losses": 5,
+    "draws": 0,
+    "kos": 8,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 2,
+    "mma-fighter": {
+      "first_name": "FRANKIE",
+      "last_name": "EDGAR"
+    }
+  },
+  {
+    "wins": 18,
+    "losses": 6,
+    "draws": 0,
+    "kos": 9,
+    "tkos": 3,
+    "submissions": 3,
+    "decisions": 3,
+    "mma-fighter": {
+      "first_name": "TONY",
+      "last_name": "FERGUSON"
+    }
+  }
+]

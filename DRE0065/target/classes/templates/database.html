@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database</title>
+    <link rel="icon" href="/css_js/images/logo.png" type="image/png">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css_js/css/styles.css">
+    <meta name="_csrf" content="{{_csrf.token}}">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg d-flex justify-content-between">
+    <div class="d-flex align-items-center">
+        <a class="navbar-brand font-weight-bold" href="#" onclick="toggleInfo()">MMA Database</a>
+        <a class="btn btn-outline-secondary mx-2" th:href="@{/}">Main Page</a>
+        <a class="btn btn-outline-secondary mx-2" th:href="@{/database}">Database</a>
+    </div>
+
+    <div class="d-flex align-items-center">
+        <button id="addCoachBtn" class="btn btn-outline-secondary mx-2" data-toggle="modal" data-target="#addCoachModal">Add Coach</button>
+        <button id="addCategoryBtn" class="btn btn-outline-secondary mx-2" data-toggle="modal" data-target="#addCategoryModal">Add Category</button>
+        <button id="addEventBtn" class="btn btn-outline-secondary mx-2" data-toggle="modal" data-target="#addEventModal">Add Event</button>
+        <button id="addFightBtn" class="btn btn-outline-secondary mx-2" data-toggle="modal" data-target="#addFightModal">Add Fight</button>
+        <button id="addMMAFightBtn" class="btn btn-outline-secondary mx-2" data-toggle="modal" data-target="#addMMAFightModal">Add MMA Fight</button>
+        <button id="addMMAFighterBtn" class="btn btn-outline-secondary mx-2" data-toggle="modal" data-target="#addMMAFighterModal">Add MMA Fighter</button>
+        <button id="addPreparationBtn" class="btn btn-outline-secondary mx-2" data-toggle="modal" data-target="#addPreparationModal">Add Preparation</button>
+        <button id="addStatsBtn" class="btn btn-outline-secondary mx-2" data-toggle="modal" data-target="#addStatModal">Add Stats</button>
+        <button class="btn btn-outline-primary mx-2" id="login-button" data-toggle="modal" data-target="#loginModal">Login</button>
+        <i class="bi bi-person-circle mx-2" id="user-icon" style="display: none; font-size: 1.5rem;"></i>
+        <span class="font-weight-bold mx-2" id="user-role" style="display: none;">Basic User</span>
+        <button class="btn btn-outline-danger mx-2" id="logout-button" style="display: none;">Logout</button>
+    </div>
+</nav>
+
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="login-form">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="loginfirstname">Login</label>
+                        <input type="text" class="form-control" id="loginfirstname" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginlastname">Password</label>
+                        <input type="password" class="form-control" id="loginlastname" required>
+                    </div>
+                    <div class="alert alert-danger d-none" id="login-error" role="alert">
+                        Invalid credentials. Please try again.
+                    </div>
+                    <hr>
+                    <p>Or</p>
+                    <button type="button" class="btn btn-secondary btn-block" id="skip-login-button">I'm Basic User</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addCoachModal" tabindex="-1" role="dialog" aria-labelledby="addCoachModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCoachModalLabel">ADD NEW COACH</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addCoachForm">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" class="form-control" id="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="specialization">Specialization</label>
+                        <input type="text" class="form-control" id="specialization" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="addCoach()">Save Coach</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editCoachModal" tabindex="-1" role="dialog" aria-labelledby="editCoachModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCoachModalLabel">EDIT COACH</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editCoachForm">
+                    <input type="hidden" id="editCoachId">
+                    <div class="form-group">
+                        <label for="editFirstName">First Name</label>
+                        <input type="text" class="form-control" id="editFirstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editLastName">Last Name</label>
+                        <input type="text" class="form-control" id="editLastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editSpecialization">Specialization</label>
+                        <input type="text" class="form-control" id="editSpecialization" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveCoachEdit()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCategoryModalLabel">ADD NEW CATEGORY</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addCategoryForm">
+                    <div class="form-group">
+                        <label for="categoryName">Category Name</label>
+                        <input type="text" class="form-control" id="categoryName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="minWeight">Min Weight</label>
+                        <input type="text" class="form-control" id="minWeight" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="maxWeight">Max Weight</label>
+                        <input type="text" class="form-control" id="maxWeight" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="addCategory()">Save Category</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editCategoryModal" tabindex="-1" role="dialog" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCategoryModalLabel">EDIT CATEGORY</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editCategoryForm">
+                    <input type="hidden" id="editCategoryId">
+                    <div class="form-group">
+                        <label for="editCategoryName">Category Name</label>
+                        <input type="text" class="form-control" id="editCategoryName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editMinWeight">Min Weight</label>
+                        <input type="text" class="form-control" id="editMinWeight" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editMaxWeight">Max Weight</label>
+                        <input type="text" class="form-control" id="editMaxWeight" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveCategoryEdit()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addEventModal" tabindex="-1" role="dialog" aria-labelledby="addEventModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addEventModalLabel">ADD NEW EVENT</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addEventForm">
+                    <div class="form-group">
+                        <label for="eventName">Event Name</label>
+                        <input type="text" class="form-control" id="eventName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mmaOrganization">MMA Organization</label>
+                        <input type="text" class="form-control" id="mmaOrganization" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="startOfEvent">Start of Event</label>
+                        <input type="datetime-local" class="form-control" id="startOfEvent" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="endOfEvent">End of Event</label>
+                        <input type="datetime-local" class="form-control" id="endOfEvent" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" class="form-control" id="location" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="addEvent()">Save Event</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editEventModal" tabindex="-1" role="dialog" aria-labelledby="editEventModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editEventModalLabel">EDIT EVENT</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editEventForm">
+                    <input type="hidden" id="editEventId">
+                    <div class="form-group">
+                        <label for="editEventName">Event Name</label>
+                        <input type="text" class="form-control" id="editEventName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editmmaOrganization">MMA Organization</label>
+                        <input type="text" class="form-control" id="editmmaOrganization" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editStartOfEvent">Start of Event</label>
+                        <input type="datetime-local" class="form-control" id="editStartOfEvent" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editEndOfEvent">End of Event</label>
+                        <input type="datetime-local" class="form-control" id="editEndOfEvent" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editLocation">Location</label>
+                        <input type="text" class="form-control" id="editLocation" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveEventEdit()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addMMAFighterModal" tabindex="-1" role="dialog" aria-labelledby="addMMAFighterModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addMMAFighterModalLabel">ADD NEW MMA FIGHTER</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addMMAFighterForm">
+                    <div class="form-group">
+                        <label for="fighterFirstName">First Name</label>
+                        <input type="text" class="form-control" id="fighterFirstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fighterLastName">Last Name</label>
+                        <input type="text" class="form-control" id="fighterLastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fighterWeight">Weight</label>
+                        <input type="text" class="form-control" id="fighterWeight" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fighterHeight">Height</label>
+                        <input type="text" class="form-control" id="fighterHeight" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fighterReach">Reach</label>
+                        <input type="text" class="form-control" id="fighterReach" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fighterNationality">Nationality</label>
+                        <input type="text" class="form-control" id="fighterNationality" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fighterRanking">Ranking</label>
+                        <input type="text" class="form-control" id="fighterRanking" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fighterFights">Fights</label>
+                        <input type="number" class="form-control" id="fighterFights" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fighterPoints">Points</label>
+                        <input type="number" class="form-control" id="fighterPoints" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fighterWeightCategory">Weight Category</label>
+                        <select class="form-control" id="fighterWeightCategory" required>
+                            <option value="">Select Weight Category</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="addMMAFighter()">Save Fighter</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editMMAFighterModal" tabindex="-1" role="dialog" aria-labelledby="editMMAFighterModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editMMAFighterModalLabel">EDIT MMA FIGHTER</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editMMAFighterForm">
+                    <input type="hidden" id="editFighterId">
+                    <div class="form-group">
+                        <label for="editFighterFirstName">First Name</label>
+                        <input type="text" class="form-control" id="editFighterFirstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editFighterLastName">Last Name</label>
+                        <input type="text" class="form-control" id="editFighterLastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editFighterWeight">Weight</label>
+                        <input type="text" class="form-control" id="editFighterWeight" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editFighterHeight">Height</label>
+                        <input type="text" class="form-control" id="editFighterHeight" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editFighterReach">Reach</label>
+                        <input type="text" class="form-control" id="editFighterReach" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editFighterNationality">Nationality</label>
+                        <input type="text" class="form-control" id="editFighterNationality" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editFighterRanking">Ranking</label>
+                        <input type="text" class="form-control" id="editFighterRanking" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editFighterFights">Fights</label>
+                        <input type="number" class="form-control" id="editFighterFights" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editFighterPoints">Points</label>
+                        <input type="number" class="form-control" id="editFighterPoints" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editFighterWeightCategory">Weight Category</label>
+                        <select class="form-control" id="editFighterWeightCategory" required>
+                            <option value="">Select Weight Category</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveMMAFighterEdit()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addPreparationModal" tabindex="-1" role="dialog" aria-labelledby="addPreparationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPreparationModalLabel">Add New Preparation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addPreparationForm">
+                    <div class="form-group">
+                        <label for="startOfPreparation">Start of Preparation</label>
+                        <input type="datetime-local" class="form-control" id="startOfPreparation" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="endOfPreparation">End of Preparation</label>
+                        <input type="datetime-local" class="form-control" id="endOfPreparation" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mmaClub">MMA Club</label>
+                        <input type="text" class="form-control" id="mmaClub" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="clubRegion">Club Region</label>
+                        <input type="text" class="form-control" id="clubRegion" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mmaFighter">MMA Fighter</label>
+                        <select class="form-control" id="mmaFighter" required>
+                            <option value="">Select Fighter</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="coach">Coach</label>
+                        <select class="form-control" id="coach" required>
+                            <option value="">Select Coach</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="addPreparation()">Save Preparation</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editPreparationModal" tabindex="-1" role="dialog" aria-labelledby="editPreparationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editPreparationModalLabel">Edit Preparation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editPreparationForm">
+                    <div class="form-group">
+                        <label for="editstartOfPreparation">Start of Preparation</label>
+                        <input type="datetime-local" class="form-control" id="editstartOfPreparation" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editendOfPreparation">End of Preparation</label>
+                        <input type="datetime-local" class="form-control" id="editendOfPreparation" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editmmaClub">MMA Club</label>
+                        <input type="text" class="form-control" id="editmmaClub" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editclubRegion">Club Region</label>
+                        <input type="text" class="form-control" id="editclubRegion" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editmmaFighter">MMA Fighter</label>
+                        <select class="form-control" id="editmmaFighter" required>
+                            <option value="">Select Fighter</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editcoach">Coach</label>
+                        <select class="form-control" id="editcoach" required>
+                            <option value="">Select Coach</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="savePreparationChanges()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addFightModal" tabindex="-1" role="dialog" aria-labelledby="addFightModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addFightModalLabel">Add New Fight</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addFightForm">
+                    <div class="form-group">
+                        <label for="fightDate">Date</label>
+                        <input type="datetime-local" class="form-control" id="fightDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fightResult">Result</label>
+                        <input type="text" class="form-control" id="fightResult" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fightTypeOfResult">Type of Result</label>
+                        <input type="text" class="form-control" id="fightTypeOfResult" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fightWeightCategory">Weight Category</label>
+                        <select class="form-control" id="fightWeightCategory" required>
+                            <option value="">Select Weight Category</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="fightEvent">Event</label>
+                        <select class="form-control" id="fightEvent" required>
+                            <option value="">Select Event</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="addFight()">Save Fight</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editFightModal" tabindex="-1" role="dialog" aria-labelledby="editFightModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editFightModalLabel">Edit Fight</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editFightForm">
+                    <div class="form-group">
+                        <label for="editFightDate">Date</label>
+                        <input type="datetime-local" class="form-control" id="editFightDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editFightResult">Result</label>
+                        <input type="text" class="form-control" id="editFightResult" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editFightTypeOfResult">Type of Result</label>
+                        <input type="text" class="form-control" id="editFightTypeOfResult" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editFightWeightCategory">Weight Category</label>
+                        <select class="form-control" id="editFightWeightCategory" required>
+                            <option value="">Select Weight Category</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editFightEvent">Event</label>
+                        <select class="form-control" id="editFightEvent" required>
+                            <option value="">Select Event</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveFightChanges()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addMMAFightModal" tabindex="-1" role="dialog" aria-labelledby="addMMAFightModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New MMAFight</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addMMAFightForm">
+                    <div class="form-group">
+                        <label for="addFightSelect">Fight</label>
+                        <select class="form-control" id="addFightSelect" required>
+                            <option value="">Select Fight</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="addFighterSelect">Fighter</label>
+                        <select class="form-control" id="addFighterSelect" required>
+                            <option value="">Select Fighter</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="addMMAFight()">Save MMAFight</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editMMAFightModal" tabindex="-1" role="dialog" aria-labelledby="editMMAFightModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit MMAFight</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editMMAFightForm">
+                    <div class="form-group">
+                        <label for="editFightSelect">Fight</label>
+                        <select class="form-control" id="editFightSelect" required>
+                            <option value="">Select Fight</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editFighterSelect">Fighter</label>
+                        <select class="form-control" id="editFighterSelect" required>
+                            <option value="">Select Fighter</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveMMAFightChanges()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addStatModal" tabindex="-1" role="dialog" aria-labelledby="addStatModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="addStatModalLabel" class="modal-title">Add New Stat</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addStatForm">
+                    <div class="form-group">
+                        <label for="addWins">Wins</label>
+                        <input type="number" class="form-control" id="addWins" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addLosses">Losses</label>
+                        <input type="number" class="form-control" id="addLosses" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addDraws">Draws</label>
+                        <input type="number" class="form-control" id="addDraws" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addKos">KOs</label>
+                        <input type="number" class="form-control" id="addKos" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addTkos">TKOs</label>
+                        <input type="number" class="form-control" id="addTkos" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addSubmissions">Submissions</label>
+                        <input type="number" class="form-control" id="addSubmissions" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addDecisions">Decisions</label>
+                        <input type="number" class="form-control" id="addDecisions" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addFighterStatSelect">Fighter</label>
+                        <select class="form-control" id="addFighterStatSelect" required>
+                            <option value="">Select Fighter</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="addStat()">Save Stat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editStatModal" tabindex="-1" role="dialog" aria-labelledby="editStatModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="editStatModalLabel" class="modal-title">Edit Stat</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editStatForm">
+                    <input type="hidden" id="editStatsId">
+                    <div class="form-group">
+                        <label for="editWins">Wins</label>
+                        <input type="number" class="form-control" id="editWins" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editLosses">Losses</label>
+                        <input type="number" class="form-control" id="editLosses" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDraws">Draws</label>
+                        <input type="number" class="form-control" id="editDraws" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editKos">KOs</label>
+                        <input type="number" class="form-control" id="editKos" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editTkos">TKOs</label>
+                        <input type="number" class="form-control" id="editTkos" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editSubmissions">Submissions</label>
+                        <input type="number" class="form-control" id="editSubmissions" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDecisions">Decisions</label>
+                        <input type="number" class="form-control" id="editDecisions" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editFighterStatSelect">Fighter</label>
+                        <select class="form-control" id="editFighterStatSelect" required>
+                            <option value="">Select Fighter</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveStatChanges()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-3" id="mma-fighter-filters" style="display: none;">
+    <h4 class="h4_header">Filter MMA Fighters</h4>
+    <form id="mma-fighter-filter-form" class="form-inline">
+        <div class="form-group mx-2">
+            <select id="weight-category-filter" class="form-control" onchange="applyMMAFighterFilter()">
+                <option value="">All Weight Categories</option>
+            </select>
+        </div>
+        <div class="form-group mx-2">
+            <select id="nationality-filter" class="form-control" onchange="applyMMAFighterFilter()">
+            </select>
+        </div>
+        <div class="form-group mx-2">
+            <input type="text" class="form-control" id="name-filter" placeholder="Enter Fighter Name" onkeydown="checkEnter(event)">
+        </div>
+    </form>
+</div>
+
+<div class="container mb-3" id="stats-filters" style="display: none;">
+    <h4 class="h4_header">Filter Fighters Stats</h4>
+    <form id="stats-filter-form" class="form-inline">
+        <div class="form-group mx-2">
+            <input type="number" class="form-control" id="min-wins" placeholder="Min Wins" oninput="applyStatsFilter()">
+        </div>
+        <div class="form-group mx-2">
+            <input type="number" class="form-control" id="max-wins" placeholder="Max Wins" oninput="applyStatsFilter()">
+        </div>
+    </form>
+</div>
+
+<div class="text-center mb-3">
+    <button class="btn btn-outline-secondary mx-2" onclick="showCoaches()">Show Coaches</button>
+    <button class="btn btn-outline-secondary mx-2" onclick="showEvents()">Show Events</button>
+    <button class="btn btn-outline-secondary mx-2" onclick="showFights()">Show Fights</button>
+    <button class="btn btn-outline-secondary mx-2" onclick="showMMAFights()">Show MMAFights</button>
+    <button class="btn btn-outline-secondary mx-2" onclick="showMMAFighters()">Show MMAFighters</button>
+    <button class="btn btn-outline-secondary mx-2" onclick="showPreparations()">Show Preparations</button>
+    <button class="btn btn-outline-secondary mx-2" onclick="showStats()">Show Stats</button>
+    <button class="btn btn-outline-secondary mx-2" onclick="showWeightCategories()">Show WeightCategories</button>
+</div>
+
+<div class="container mt-6">
+    <table class="table table-striped" id="coaches-table">
+        <thead>
+        <tr>
+            <th>Coach ID</th>
+            <th>Coach Name</th>
+            <th>Specialization</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="coaches-table-body">
+        </tbody>
+    </table>
+
+    <table class="table table-striped" id="events-table" style="display: none;">
+        <thead>
+        <tr>
+            <th>Event ID</th>
+            <th>Event Name</th>
+            <th>MMA Organization</th>
+            <th>Event Date</th>
+            <th>Event Location</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="events-table-body">
+        </tbody>
+    </table>
+
+    <table class="table table-striped" id="weight_categories-table" style="display: none;">
+        <thead>
+        <tr>
+            <th>Category ID</th>
+            <th>Name</th>
+            <th>Weight Range</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="weight_categories-table-body">
+        </tbody>
+    </table>
+
+    <table class="table table-striped" id="mma_fighters-table" style="display: none;">
+        <thead>
+        <tr>
+            <th>Fighter ID</th>
+            <th>Fighter Name</th>
+            <th>Weight</th>
+            <th>Height</th>
+            <th>Reach</th>
+            <th>Nationality</th>
+            <th>Ranking</th>
+            <th>Fights</th>
+            <th>Points</th>
+            <th>Weight Category</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="mma_fighters-table-body">
+        </tbody>
+    </table>
+
+    <table class="table table-striped" id="stats-table" style="display: none;">
+        <thead>
+        <tr>
+            <th>Stats ID</th>
+            <th>Wins</th>
+            <th>Losses</th>
+            <th>Draws</th>
+            <th>Kos</th>
+            <th>Tkos</th>
+            <th>Submissions</th>
+            <th>Decisions</th>
+            <th>Fighter Name</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="stats-table-body">
+        </tbody>
+    </table>
+
+    <table class="table table-striped" id="preparations-table" style="display: none;">
+        <thead>
+        <tr>
+            <th>Preparation ID</th>
+            <th>Preparation Date</th>
+            <th>MMA Club</th>
+            <th>Club Region</th>
+            <th>Fighter Name</th>
+            <th>Coach Name</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="preparations-table-body">
+        </tbody>
+    </table>
+
+    <table class="table table-striped" id="fights-table" style="display: none;">
+        <thead>
+        <tr>
+            <th>Fight ID</th>
+            <th>Date of Fight</th>
+            <th>Result</th>
+            <th>Type of Result</th>
+            <th>Weight Category</th>
+            <th>Event</th>
+            <th>Event Location</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="fights-table-body">
+        </tbody>
+    </table>
+
+    <table class="table table-striped" id="mma-fights-table" style="display: none;">
+        <thead>
+        <tr>
+            <th>MMA Fight ID</th>
+            <th>Fight ID</th>
+            <th>Fighter Name</th>
+            <th>Weight Category</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="mma-fights-table-body">
+        </tbody>
+    </table>
+</div>
+
+<footer>
+    <p>© 2024 MMA Database</p>
+    <p>Created by Martin Dressler, DRE0065</p>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="/css_js/js/index.js"></script>
+<script src="/css_js/js/app.js"></script>
+<script src="/css_js/js/filters.js"></script>
+<script src="/css_js/js/CRUD.js"></script>
+<script>
+    function addStat(){
+        const wins = document.getElementById('addWins').value;
+        const losses = document.getElementById('addLosses').value;
+        const draws = document.getElementById('addDraws').value;
+        const kos = document.getElementById('addKos').value;
+        const tkos = document.getElementById('addTkos').value;
+        const submissions = document.getElementById('addSubmissions').value;
+        const decisions = document.getElementById('addDecisions').value;
+        const fighterId = document.getElementById('addFighterStatSelect').value;
+
+        if(!fighterId)
+        {
+            alert('Please select a fighter.');
+            return;
+        }
+
+        const stat = {
+            wins: parseInt(wins),
+            losses: parseInt(losses),
+            draws: parseInt(draws),
+            kos: parseInt(kos),
+            tkos: parseInt(tkos),
+            submissions: parseInt(submissions),
+            decisions: parseInt(decisions),
+            "mma-fighter": {fighterId: parseInt(fighterId)}
+        };
+
+        fetch('/api/stats/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(stat)
+        })
+            .then(response =>
+            {
+                if(response.ok)
+                {
+                    $('#addStatModal').modal('hide');
+                    fetchStats();
+                    alert('Stat added successfully!');
+                    document.getElementById('addStatForm').reset();
+                }
+                else response.text().then(text => alert('Error adding stat: ' + text));
+            })
+            .catch(error =>
+            {
+                console.error('Error adding stat:', error);
+                alert('Error adding stat.');
+            });
+    }
+
+    function editStat(id){
+        fetch(`/api/stats/all`)
+            .then(response => response.json())
+            .then(data =>
+            {
+                const stat = data.find(s => s.statsId === id);
+                if(stat)
+                {
+                    document.getElementById('editStatsId').value = stat.statsId;
+                    document.getElementById('editWins').value = stat.wins;
+                    document.getElementById('editLosses').value = stat.losses;
+                    document.getElementById('editDraws').value = stat.draws;
+                    document.getElementById('editKos').value = stat.kos;
+                    document.getElementById('editTkos').value = stat.tkos;
+                    document.getElementById('editSubmissions').value = stat.submissions;
+                    document.getElementById('editDecisions').value = stat.decisions;
+                    document.getElementById('editFighterStatSelect').value = stat['mma-fighter']?.fighterId || '';
+                    $('#editStatModal').modal('show');
+                }
+                else alert('Stat not found.');
+            })
+            .catch(error =>
+            {
+                console.error('Error fetching stats for edit:', error);
+                alert('Error fetching stat data.');
+            });
+    }
+
+    function saveStatChanges(){
+        const statsId = document.getElementById('editStatsId').value;
+        const wins = document.getElementById('editWins').value;
+        const losses = document.getElementById('editLosses').value;
+        const draws = document.getElementById('editDraws').value;
+        const kos = document.getElementById('editKos').value;
+        const tkos = document.getElementById('editTkos').value;
+        const submissions = document.getElementById('editSubmissions').value;
+        const decisions = document.getElementById('editDecisions').value;
+        const fighterId = document.getElementById('editFighterStatSelect').value;
+
+        if(!fighterId)
+        {
+            alert('Please select a fighter.');
+            return;
+        }
+
+        const stat = {
+            statsId: parseInt(statsId),
+            wins: parseInt(wins),
+            losses: parseInt(losses),
+            draws: parseInt(draws),
+            kos: parseInt(kos),
+            tkos: parseInt(tkos),
+            submissions: parseInt(submissions),
+            decisions: parseInt(decisions),
+            "mma-fighter": {fighterId: parseInt(fighterId)}
+        };
+
+        fetch(`/api/stats/update/${statsId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(stat)
+        })
+            .then(response =>
+            {
+                if(response.ok)
+                {
+                    $('#editStatModal').modal('hide');
+                    fetchStats();
+                    alert('Stat updated successfully!');
+                }
+                else response.text().then(text => alert('Error updating stat: ' + text));
+            })
+            .catch(error =>
+            {
+                console.error('Error updating stat:', error);
+                alert('Error updating stat.');
+            });
+    }
+
+    function deleteStat(id){
+        if(!confirm('Are you sure you want to delete this Stat?')) return;
+
+        fetch(`/api/stats/delete/${id}`, {
+            method: 'DELETE'
+        })
+            .then(response =>
+            {
+                if(!response.ok) return response.text().then(text => { throw new Error(text) });
+                alert('Stat deleted successfully!');
+                fetchStats();
+            })
+            .catch(error =>
+            {
+                console.error('Error deleting stat:', error);
+                alert('Error deleting stat: ' + error.message);
+            });
+    }
+
+    function populateFightersstats(selectId){
+        fetch('/api/mma-fighters/all')
+            .then(response => response.json())
+            .then(data =>
+            {
+                const selectElement = document.getElementById(selectId);
+                selectElement.innerHTML = '<option value="">Select Fighter</option>';
+                data.forEach(fighter =>
+                {
+                    const option = document.createElement('option');
+                    option.value = fighter.fighterId;
+                    option.textContent = `${fighter.first_name} ${fighter.last_name}`;
+                    selectElement.appendChild(option);
+                });
+            })
+            .catch(error =>
+            {
+                console.error('Error fetching fighters:', error);
+                alert('Error loading fighters.');
+            });
+    }
+
+    $(document).ready(function(){
+        populateFightersstats('addFighterStatSelect');
+        populateFightersstats('editFighterStatSelect');
+    });
+</script>
+</body>
+</html>
