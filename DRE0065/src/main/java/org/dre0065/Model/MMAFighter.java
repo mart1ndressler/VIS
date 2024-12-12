@@ -1,9 +1,9 @@
 package org.dre0065.Model;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.*;
-import com.fasterxml.jackson.annotation.*;
 
 @Setter
 @Getter
@@ -58,8 +58,26 @@ public class MMAFighter
     private Stats stats;
 
     @OneToMany(mappedBy = "fighter", cascade = CascadeType.ALL)
-    private Set<Preparation> preparations;
+    private Set<Preparation> preparations = new HashSet<>();
 
     @OneToMany(mappedBy = "fighter", cascade = CascadeType.ALL)
-    private Set<MMAFight> fightsParticipated;
+    private Set<MMAFight> fightsParticipated = new HashSet<>();
+
+    protected MMAFighter() {}
+
+    public static MMAFighter createMMAFighter(String firstName, String lastName, String weight, String height, String reach, String nationality, String ranking, int fights, int points, WeightCategory weightCategory)
+    {
+        MMAFighter fighter = new MMAFighter();
+        fighter.setFirstName(firstName);
+        fighter.setLastName(lastName);
+        fighter.setWeight(weight);
+        fighter.setHeight(height);
+        fighter.setReach(reach);
+        fighter.setNationality(nationality);
+        fighter.setRanking(ranking);
+        fighter.setFights(fights);
+        fighter.setPoints(points);
+        fighter.setWeightCategory(weightCategory);
+        return fighter;
+    }
 }

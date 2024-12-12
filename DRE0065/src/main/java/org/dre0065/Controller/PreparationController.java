@@ -28,10 +28,10 @@ public class PreparationController
     private CoachService coachService;
 
     @PostMapping("/add")
-    public String addPreparations(@Valid @RequestBody List<Preparation> preparations)
+    public String addPreparation(@Valid @RequestBody Preparation preparation)
     {
-        preparationService.saveAllPreparations(preparations);
-        return "Preparations added successfully!";
+        preparationService.createPreparation(preparation);
+        return "Preparation added successfully!";
     }
 
     @GetMapping("/all")
@@ -67,7 +67,6 @@ public class PreparationController
     {
         Preparation existingPreparation = preparationService.getPreparationById(id);
         if(existingPreparation == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         try
@@ -110,7 +109,7 @@ public class PreparationController
             else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Coach not found with ID: " + coachId);
         }
 
-        preparationService.savePreparation(existingPreparation);
+        preparationService.updatePreparationById(id, existingPreparation);
         return new ResponseEntity<>(existingPreparation, HttpStatus.OK);
     }
 }

@@ -8,9 +8,8 @@ import org.dre0065.Repository.MMAFighterRepository;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.servlet.http.HttpSession;
-import java.util.Optional;
+import jakarta.servlet.http.*;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api")
@@ -29,6 +28,7 @@ public class AuthController
         {
             UserResponse admin = new UserResponse("Admin", "", "admin");
             session.setAttribute("user", admin);
+            System.out.println("Logged in user: " + admin.getFirstName() + " " + admin.getLastName() + " - Role: " + admin.getRole());
             return ResponseEntity.ok("Login successful");
         }
 
@@ -38,6 +38,7 @@ public class AuthController
             MMAFighter fighter = fighterOpt.get();
             UserResponse fighterUser = new UserResponse(fighter.getFirstName(), fighter.getLastName(), "fighter");
             session.setAttribute("user", fighterUser);
+            System.out.println("Logged in user: " + fighterUser.getFirstName() + " " + fighterUser.getLastName() + " - Role: " + fighterUser.getRole());
             return ResponseEntity.ok("Login successful");
         }
 
@@ -47,9 +48,9 @@ public class AuthController
             Coach coach = coachOpt.get();
             UserResponse coachUser = new UserResponse(coach.getFirstName(), coach.getLastName(), "coach");
             session.setAttribute("user", coachUser);
+            System.out.println("Logged in user: " + coachUser.getFirstName() + " " + coachUser.getLastName() + " - Role: " + coachUser.getRole());
             return ResponseEntity.ok("Login successful");
         }
-
         return ResponseEntity.status(401).body("Invalid credentials");
     }
 
@@ -73,7 +74,7 @@ public class AuthController
     }
 
     @Getter
-    static class UserResponse
+    public static class UserResponse
     {
         private String firstName;
         private String lastName;
@@ -85,5 +86,21 @@ public class AuthController
             this.lastName = lastName;
             this.role = role;
         }
+    }
+
+    @GetMapping("/currentUser")
+    public ResponseEntity<?> getCurrentUser(HttpSession session)
+    {
+        Object userObj = session.getAttribute("user");
+        if(userObj instanceof UserResponse) return ResponseEntity.ok(userObj);
+        return ResponseEntity.status(401).body("No user logged in");
+    }
+
+    @PostMapping("/basicLogin")
+    public ResponseEntity<?> basicLogin(HttpSession session)
+    {
+        UserResponse basicUser = new UserResponse("Basic", "User", "basic");
+        session.setAttribute("user", basicUser);
+        return ResponseEntity.ok("Basic login successful");
     }
 }

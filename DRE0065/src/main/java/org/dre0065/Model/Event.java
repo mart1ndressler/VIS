@@ -23,12 +23,12 @@ public class Event
     @Column(name = "mma_organization", nullable = false, length = 20)
     private String mmaOrganization;
 
-    @JsonFormat(pattern = "yyyy-MM-dd' 'HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "start_of_event", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date startOfEvent;
 
-    @JsonFormat(pattern = "yyyy-MM-dd' 'HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "end_of_event", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date endOfEvent;
@@ -38,4 +38,17 @@ public class Event
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Fight> fights = new HashSet<>();
+
+    protected Event() {}
+
+    public static Event createEvent(String eventName, String mmaOrganization, Date startOfEvent, Date endOfEvent, String location)
+    {
+        Event event = new Event();
+        event.setEventName(eventName);
+        event.setMmaOrganization(mmaOrganization);
+        event.setStartOfEvent(startOfEvent);
+        event.setEndOfEvent(endOfEvent);
+        event.setLocation(location);
+        return event;
+    }
 }

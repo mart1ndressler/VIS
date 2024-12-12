@@ -7,8 +7,7 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.*;
-
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/mmafights")

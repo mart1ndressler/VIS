@@ -83,9 +83,7 @@ public class MMAFighterController
             else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid weight category ID: " + weightCategoryId);
         }
         else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid weight category data format");
-
-        mmaFighterService.saveFighter(existingFighter);
-        return "Fighter updated successfully!";
+        return mmaFighterService.updateFighterById(id, existingFighter);
     }
 
     @GetMapping("/{id}")

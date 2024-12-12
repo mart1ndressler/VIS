@@ -45,4 +45,18 @@ public class Preparation
     @JsonProperty("coach")
     @JoinColumn(name = "coach_id", nullable = false)
     private Coach coach;
+
+    protected Preparation() {}
+
+    public static Preparation createPreparation(Date startOfPreparation, Date endOfPreparation, String mmaClub, String clubRegion, MMAFighter fighter, Coach coach)
+    {
+        Preparation preparation = new Preparation();
+        preparation.setStartOfPreparation(startOfPreparation);
+        preparation.setEndOfPreparation(endOfPreparation);
+        preparation.setMmaClub(mmaClub);
+        preparation.setClubRegion(clubRegion);
+        preparation.setFighter(fighter);
+        preparation.setCoach(coach);
+        return preparation;
+    }
 }

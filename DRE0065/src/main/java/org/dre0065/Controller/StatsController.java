@@ -16,10 +16,16 @@ public class StatsController
     private StatsService statsService;
 
     @PostMapping("/add")
-    public String addStats(@Valid @RequestBody List<Stats> stats)
+    public ResponseEntity<String> addStats(@Valid @RequestBody Stats stats)
     {
-        statsService.saveAllStats(stats);
-        return "Stats added successfully!";
+        try
+        {
+            statsService.createStats(stats);
+            return new ResponseEntity<>("Stats added successfully!", HttpStatus.CREATED);
+        }
+        catch(IllegalStateException e) {return new ResponseEntity<>("This fighter already has stats.", HttpStatus.CONFLICT);}
+        catch(IllegalArgumentException e) {return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);}
+        catch(Exception e) {return new ResponseEntity<>("An unexpected error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);}
     }
 
     @GetMapping("/all")
@@ -33,18 +39,36 @@ public class StatsController
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateStat(@PathVariable int id, @Valid @RequestBody Stats updatedStat)
+    public ResponseEntity<?> updateStats(@PathVariable int id, @RequestBody Stats updatedStat)
     {
-        boolean isUpdated = statsService.updateStat(id, updatedStat);
-        if(isUpdated) return ResponseEntity.ok("Stat updated successfully!");
-        else return ResponseEntity.notFound().build();
+        try
+        {
+            statsService.updateStatById(id, updatedStat);
+            Stats stat = statsService.getStatsById(id);
+            return new ResponseEntity<>(stat, HttpStatus.OK);
+        }
+        catch(IllegalStateException e) {return new ResponseEntity<>("This fighter already has stats.", HttpStatus.CONFLICT);}
+        catch(IllegalArgumentException e) {return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);}
+        catch(Exception e) {return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);}
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteStat(@PathVariable int id)
+    public ResponseEntity<String> deleteStats(@PathVariable int id)
     {
-        boolean isDeleted = statsService.deleteStat(id);
-        if(isDeleted) return ResponseEntity.ok("Stat deleted successfully!");
-        else return ResponseEntity.notFound().build();
+        try
+        {
+            statsService.deleteStatById(id);
+            return new ResponseEntity<>("Stats with ID " + id + " deleted successfully!", HttpStatus.OK);
+        }
+        catch(IllegalArgumentException e) {return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);}
+        catch(Exception e) {return new ResponseEntity<>("An unexpected error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);}
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Stats> getStatsById(@PathVariable int id)
+    {
+        Stats stat = statsService.getStatsById(id);
+        if(stat == null) {return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);}
+        return new ResponseEntity<>(stat, HttpStatus.OK);
     }
 }

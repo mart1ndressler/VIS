@@ -3,17 +3,18 @@ package org.dre0065.Service;
 import com.fasterxml.jackson.core.type.*;
 import com.fasterxml.jackson.databind.*;
 import jakarta.annotation.*;
-import org.dre0065.Model.Event;
 import org.dre0065.Model.Fight;
 import org.dre0065.Model.WeightCategory;
+import org.dre0065.Model.Event;
 import org.dre0065.Repository.FightRepository;
+import org.dre0065.Event.EntityAddedEvent;
+import org.dre0065.Event.EntityOperationType;
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.context.*;
 import org.springframework.core.io.*;
 import org.springframework.stereotype.*;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import java.io.*;
+import java.util.*;
 
 @Service
 public class FightService
@@ -26,6 +27,9 @@ public class FightService
 
     @Autowired
     private EventService eventService;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     @PostConstruct
     public void init() {loadFightsFromJson();}
@@ -43,7 +47,7 @@ public class FightService
                 WeightCategory weightCategory = weightCategoryService.getWeightCategoryByName(fightFromJson.getWeightCategory().getName());
                 if(weightCategory == null)
                 {
-                    System.out.println("WeightCategory not found: " + fightFromJson.getWeightCategory().getName());
+                    System.err.println("WeightCategory not found: " + fightFromJson.getWeightCategory().getName());
                     continue;
                 }
                 fightFromJson.setWeightCategory(weightCategory);
@@ -51,39 +55,64 @@ public class FightService
                 Event event = eventService.getEventByName(fightFromJson.getEvent().getEventName());
                 if(event == null)
                 {
-                    System.out.println("Event not found: " + fightFromJson.getEvent().getEventName());
+                    System.err.println("Event not found: " + fightFromJson.getEvent().getEventName());
                     continue;
                 }
                 fightFromJson.setEvent(event);
 
-                Optional<Fight> existingFight = fightRepository.findByDateAndWeightCategoryAndEvent(
-                        fightFromJson.getDate(),
-                        weightCategory,
-                        event
-                );
-
+                Optional<Fight> existingFight = fightRepository.findByDateAndWeightCategoryAndEvent(fightFromJson.getDate(), weightCategory, event);
                 if(existingFight.isPresent())
                 {
                     Fight fightToUpdate = existingFight.get();
                     fightToUpdate.setResult(fightFromJson.getResult());
                     fightToUpdate.setTypeOfResult(fightFromJson.getTypeOfResult());
                     fightRepository.save(fightToUpdate);
-                    System.out.println("Updated existing fight for event: " + event.getEventName() + ", category: " + weightCategory.getName());
+                    eventPublisher.publishEvent(new EntityAddedEvent(this, fightToUpdate, EntityOperationType.UPDATE));
                 }
                 else
                 {
-                    fightRepository.save(fightFromJson);
-                    System.out.println("Added new fight for event: " + event.getEventName() + ", category: " + weightCategory.getName());
+                    Fight fightToSave = Fight.createFight(fightFromJson.getDate(), fightFromJson.getResult(), fightFromJson.getTypeOfResult(), weightCategory, event);
+                    fightRepository.save(fightToSave);
+                    eventPublisher.publishEvent(new EntityAddedEvent(this, fightToSave, EntityOperationType.CREATE));
                 }
             }
-            System.out.println("Fights successfully processed from JSON!");
         }
-        catch (IOException e) {System.err.println("Error loading fights from JSON: " + e.getMessage());}
+        catch(IOException e) {System.err.println("Error loading fights from JSON: " + e.getMessage());}
     }
 
     public List<Fight> getAllFights() {return fightRepository.findAll();}
-    public void saveAllFights(List<Fight> fights) {fightRepository.saveAll(fights);}
+
+    public void saveAllFights(List<Fight> fights)
+    {
+        List<Fight> fightsToSave = new ArrayList<>();
+        for(Fight fight : fights)
+        {
+            Fight fightBuilt = Fight.createFight(fight.getDate(), fight.getResult(), fight.getTypeOfResult(), fight.getWeightCategory(), fight.getEvent());
+            fightsToSave.add(fightBuilt);
+        }
+        fightRepository.saveAll(fightsToSave);
+        for(Fight savedFight : fightsToSave) eventPublisher.publishEvent(new EntityAddedEvent(this, savedFight, EntityOperationType.CREATE));
+    }
+
     public Fight getFightById(int fightId) {return fightRepository.findById(fightId).orElse(null);}
-    public void saveFight(Fight fight) {fightRepository.save(fight);}
-    public void deleteFightById(int fightId) {fightRepository.deleteById(fightId);}
+
+    public void saveFight(Fight fight)
+    {
+        boolean isCreate = fight.getFightId() == 0;
+        fightRepository.save(fight);
+        EntityOperationType operationType = isCreate ? EntityOperationType.CREATE : EntityOperationType.UPDATE;
+        eventPublisher.publishEvent(new EntityAddedEvent(this, fight, operationType));
+    }
+
+    public void deleteFightById(int fightId)
+    {
+        Optional<Fight> fightOpt = fightRepository.findById(fightId);
+        if(fightOpt.isPresent())
+        {
+            Fight fight = fightOpt.get();
+            fightRepository.deleteById(fightId);
+            eventPublisher.publishEvent(new EntityAddedEvent(this, fight, EntityOperationType.DELETE));
+        }
+        else throw new RuntimeException("Fight with ID " + fightId + " not found!");
+    }
 }

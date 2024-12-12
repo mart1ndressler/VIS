@@ -7,20 +7,30 @@ import org.dre0065.Model.Stats;
 import org.dre0065.Model.MMAFighter;
 import org.dre0065.Repository.StatsRepository;
 import org.dre0065.Repository.MMAFighterRepository;
+import org.dre0065.Event.EntityAddedEvent;
+import org.dre0065.Event.EntityOperationType;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.context.*;
 import org.springframework.core.io.*;
 import org.springframework.stereotype.*;
+import org.springframework.transaction.annotation.*;
 import java.io.*;
 import java.util.*;
 
 @Service
 public class StatsService
 {
+    private static final Logger logger = LoggerFactory.getLogger(StatsService.class);
+
     @Autowired
     private StatsRepository statsRepository;
 
     @Autowired
     private MMAFighterRepository mmaFighterRepository;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     @PostConstruct
     public void init() {loadStatsFromJson();}
@@ -52,29 +62,54 @@ public class StatsService
                         existingStats.setSubmissions(statsFromJsonItem.getSubmissions());
                         existingStats.setDecisions(statsFromJsonItem.getDecisions());
                         statsRepository.save(existingStats);
-                        System.out.println("Updated stats for fighter: " + fighter.getFirstName() + " " + fighter.getLastName());
+
+                        eventPublisher.publishEvent(new EntityAddedEvent(this, existingStats, EntityOperationType.UPDATE));
+                        logger.info("Updated Stats for Fighter ID: {}", existingStats.getStatsId());
                     }
                     else
                     {
-                        statsRepository.save(statsFromJsonItem);
-                        System.out.println("Added stats for fighter: " + fighter.getFirstName() + " " + fighter.getLastName());
+                        Stats statsToSave = Stats.createStats(statsFromJsonItem.getWins(), statsFromJsonItem.getLosses(), statsFromJsonItem.getDraws(), statsFromJsonItem.getKos(), statsFromJsonItem.getTkos(), statsFromJsonItem.getSubmissions(), statsFromJsonItem.getDecisions(), fighter);
+                        statsRepository.save(statsToSave);
+                        eventPublisher.publishEvent(new EntityAddedEvent(this, statsToSave, EntityOperationType.CREATE));
+                        logger.info("Created Stats for Fighter ID: {}", statsToSave.getStatsId());
                     }
                 }
-                else System.out.println("Fighter not found for stats: " + statsFromJsonItem.getFighter().getFirstName() + " " + statsFromJsonItem.getFighter().getLastName());
+                else logger.error("Fighter not found for stats: {} {}", statsFromJsonItem.getFighter().getFirstName(), statsFromJsonItem.getFighter().getLastName());
             }
-            System.out.println("Stats successfully processed from JSON!");
         }
-        catch(IOException e) {System.err.println("Error loading stats from JSON: " + e.getMessage());}
+        catch(IOException e) {logger.error("Error loading stats from JSON: {}", e.getMessage());}
     }
 
-    public void saveAllStats(List<Stats> stats) {statsRepository.saveAll(stats);}
-    public List<Stats> getAllStats() {return statsRepository.findAll();}
-    public boolean updateStat(int id, Stats updatedStat)
+    @Transactional
+    public void createStats(Stats stats)
     {
-        Optional<Stats> optionalStat = statsRepository.findById(id);
-        if(optionalStat.isPresent())
+        MMAFighter fighter = mmaFighterRepository.findById(stats.getFighter().getFighterId()).orElse(null);
+        if(fighter == null)
         {
-            Stats existingStat = optionalStat.get();
+            logger.error("Fighter not found for stats creation.");
+            throw new IllegalArgumentException("Fighter not found for stats creation.");
+        }
+
+        Optional<Stats> existingStatsOpt = statsRepository.findByFighter(fighter);
+        if(existingStatsOpt.isPresent())
+        {
+            logger.error("Fighter with ID {} already has stats.", fighter.getFighterId());
+            throw new IllegalStateException("Fighter with ID " + fighter.getFighterId() + " already has stats.");
+        }
+
+        Stats statsToSave = Stats.createStats(stats.getWins(), stats.getLosses(), stats.getDraws(), stats.getKos(), stats.getTkos(), stats.getSubmissions(), stats.getDecisions(), fighter);
+        statsRepository.save(statsToSave);
+        eventPublisher.publishEvent(new EntityAddedEvent(this, statsToSave, EntityOperationType.CREATE));
+        logger.info("Created Stats for Fighter ID: {}", fighter.getFighterId());
+    }
+
+    @Transactional
+    public void updateStatById(int id, Stats updatedStat)
+    {
+        Optional<Stats> existingStatOpt = statsRepository.findById(id);
+        if(existingStatOpt.isPresent())
+        {
+            Stats existingStat = existingStatOpt.get();
             existingStat.setWins(updatedStat.getWins());
             existingStat.setLosses(updatedStat.getLosses());
             existingStat.setDraws(updatedStat.getDraws());
@@ -82,25 +117,100 @@ public class StatsService
             existingStat.setTkos(updatedStat.getTkos());
             existingStat.setSubmissions(updatedStat.getSubmissions());
             existingStat.setDecisions(updatedStat.getDecisions());
+
             if(updatedStat.getFighter() != null)
             {
                 MMAFighter fighter = mmaFighterRepository.findById(updatedStat.getFighter().getFighterId()).orElse(null);
-                if(fighter != null) existingStat.setFighter(fighter);
+                if(fighter != null)
+                {
+                    Optional<Stats> fighterStatsOpt = statsRepository.findByFighter(fighter);
+                    if(fighterStatsOpt.isPresent() && fighterStatsOpt.get().getStatsId() != id)
+                    {
+                        logger.error("Fighter with ID {} already has stats.", fighter.getFighterId());
+                        throw new IllegalStateException("Fighter with ID " + fighter.getFighterId() + " already has stats.");
+                    }
+                    existingStat.setFighter(fighter);
+                }
+                else
+                {
+                    logger.error("Fighter with ID {} not found for stats update.", updatedStat.getFighter().getFighterId());
+                    throw new IllegalArgumentException("Fighter with ID " + updatedStat.getFighter().getFighterId() + " not found.");
+                }
             }
+
             statsRepository.save(existingStat);
-            return true;
+            eventPublisher.publishEvent(new EntityAddedEvent(this, existingStat, EntityOperationType.UPDATE));
+            logger.info("Updated Stats with ID: {}", existingStat.getStatsId());
         }
-        else return false;
+        else
+        {
+            logger.error("Stats with ID {} not found for update.", id);
+            throw new IllegalArgumentException("Stats with ID " + id + " not found.");
+        }
     }
 
-    public boolean deleteStat(int id)
+    @Transactional
+    public void deleteStatById(int id)
+    {
+        Optional<Stats> optionalStatOpt = statsRepository.findById(id);
+        if(optionalStatOpt.isPresent())
+        {
+            Stats stat = optionalStatOpt.get();
+            MMAFighter fighter = stat.getFighter();
+            if(fighter != null)
+            {
+                fighter.setStats(null);
+                mmaFighterRepository.save(fighter);
+            }
+
+            statsRepository.delete(stat);
+            eventPublisher.publishEvent(new EntityAddedEvent(this, stat, EntityOperationType.DELETE));
+            logger.info("Deleted Stats with ID: {}", id);
+        }
+        else
+        {
+            logger.error("Stats with ID {} not found for deletion.", id);
+            throw new IllegalArgumentException("Stats with ID " + id + " not found.");
+        }
+    }
+
+    public List<Stats> getAllStats() {return statsRepository.findAll();}
+
+    @Transactional
+    public void saveAllStats(List<Stats> statsList)
+    {
+        List<Stats> statsToSave = new ArrayList<>();
+        for(Stats stat : statsList)
+        {
+            MMAFighter fighter = stat.getFighter();
+            Optional<Stats> existingStatOpt = statsRepository.findByFighter(fighter);
+            if(existingStatOpt.isPresent())
+            {
+                logger.error("Fighter with ID {} already has stats.", fighter.getFighterId());
+                continue;
+            }
+
+            Stats statBuilt = Stats.createStats(stat.getWins(), stat.getLosses(), stat.getDraws(), stat.getKos(), stat.getTkos(), stat.getSubmissions(), stat.getDecisions(), fighter);
+            statsToSave.add(statBuilt);
+        }
+        statsRepository.saveAll(statsToSave);
+        for(Stats savedStat : statsToSave)
+        {
+            eventPublisher.publishEvent(new EntityAddedEvent(this, savedStat, EntityOperationType.CREATE));
+            logger.info("Created Stats with ID: {}", savedStat.getStatsId());
+        }
+    }
+
+    @Transactional
+    public void saveStat(Stats stat)
+    {
+        if(stat.getStatsId() == 0) createStats(stat);
+        else updateStatById(stat.getStatsId(), stat);
+    }
+
+    public Stats getStatsById(int id)
     {
         Optional<Stats> optionalStat = statsRepository.findById(id);
-        if(optionalStat.isPresent())
-        {
-            statsRepository.deleteById(id);
-            return true;
-        }
-        else return false;
+        return optionalStat.orElse(null);
     }
 }

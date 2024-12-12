@@ -40,4 +40,20 @@ public class Stats
     @JoinColumn(name = "fighter_id", nullable = false)
     @JsonProperty("mma-fighter")
     private MMAFighter fighter;
+
+    protected Stats() {}
+
+    public static Stats createStats(int wins, int losses, int draws, int kos, int tkos, int submissions, int decisions, MMAFighter fighter)
+    {
+        Stats stats = new Stats();
+        stats.setWins(wins);
+        stats.setLosses(losses);
+        stats.setDraws(draws);
+        stats.setKos(kos);
+        stats.setTkos(tkos);
+        stats.setSubmissions(submissions);
+        stats.setDecisions(decisions);
+        stats.setFighter(fighter);
+        return stats;
+    }
 }

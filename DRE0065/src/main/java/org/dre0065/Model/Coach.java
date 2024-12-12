@@ -1,5 +1,6 @@
 package org.dre0065.Model;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,6 +8,7 @@ import lombok.*;
 @Getter
 @Entity
 @Table(name = "coach")
+@JsonIgnoreProperties({"preparations"})
 public class Coach
 {
     @Id
@@ -22,4 +24,15 @@ public class Coach
 
     @Column(name = "specialization", nullable = false, length = 20)
     private String specialization;
+
+    protected Coach() {}
+
+    public static Coach createCoach(String firstName, String lastName, String specialization)
+    {
+        Coach coach = new Coach();
+        coach.setFirstName(firstName);
+        coach.setLastName(lastName);
+        coach.setSpecialization(specialization);
+        return coach;
+    }
 }

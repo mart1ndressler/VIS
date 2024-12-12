@@ -5,7 +5,10 @@ import com.fasterxml.jackson.databind.*;
 import jakarta.annotation.*;
 import org.dre0065.Model.WeightCategory;
 import org.dre0065.Repository.WeightCategoryRepository;
+import org.dre0065.Event.EntityAddedEvent;
+import org.dre0065.Event.EntityOperationType;
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.context.*;
 import org.springframework.core.io.*;
 import org.springframework.stereotype.*;
 import java.io.*;
@@ -16,6 +19,9 @@ public class WeightCategoryService
 {
     @Autowired
     private WeightCategoryRepository weightCategoryRepository;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     @PostConstruct
     public void init() {loadUniqueWeightCategoriesFromJson();}
@@ -34,28 +40,42 @@ public class WeightCategoryService
 
                 if(!exists)
                 {
-                    weightCategoryRepository.save(categoryFromJson);
-                    System.out.println("Added new weight category: " + categoryFromJson.getName());
+                    WeightCategory categoryToSave = WeightCategory.createWeightCategory(categoryFromJson.getName(), categoryFromJson.getMinWeight(), categoryFromJson.getMaxWeight());
+                    weightCategoryRepository.save(categoryToSave);
+                    eventPublisher.publishEvent(new EntityAddedEvent(this, categoryToSave, EntityOperationType.CREATE));
                 }
-                else System.out.println("Weight category already exists: " + categoryFromJson.getName());
             }
-            System.out.println("Weight categories successfully processed from JSON!");
         }
         catch(IOException e) {System.err.println("Error loading weight categories from JSON: " + e.getMessage());}
     }
 
-    public void saveAllWeightCategories(List<WeightCategory> categories) {weightCategoryRepository.saveAll(categories);}
+    public void saveAllWeightCategories(List<WeightCategory> categories)
+    {
+        List<WeightCategory> categoriesToSave = new ArrayList<>();
+        for(WeightCategory category : categories)
+        {
+            WeightCategory categoryBuilt = WeightCategory.createWeightCategory(category.getName(), category.getMinWeight(), category.getMaxWeight());
+            categoriesToSave.add(categoryBuilt);
+        }
+        weightCategoryRepository.saveAll(categoriesToSave);
+        for(WeightCategory savedCategory : categoriesToSave) eventPublisher.publishEvent(new EntityAddedEvent(this, savedCategory, EntityOperationType.CREATE));
+    }
+
     public List<WeightCategory> getAllWeightCategories() {return weightCategoryRepository.findAll();}
+    public WeightCategory getWeightCategoryById(int id) {return weightCategoryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Weight category with ID " + id + " not found."));}
+    public WeightCategory getWeightCategoryByName(String name) {return weightCategoryRepository.findByName(name).orElse(null);}
+
     public String updateWeightCategoryById(int id, WeightCategory updatedCategory)
     {
-        Optional<WeightCategory> existingCategory = weightCategoryRepository.findById(id);
-        if(existingCategory.isPresent())
+        Optional<WeightCategory> existingCategoryOpt = weightCategoryRepository.findById(id);
+        if(existingCategoryOpt.isPresent())
         {
-            WeightCategory category = existingCategory.get();
-            category.setName(updatedCategory.getName());
-            category.setMinWeight(updatedCategory.getMinWeight());
-            category.setMaxWeight(updatedCategory.getMaxWeight());
-            weightCategoryRepository.save(category);
+            WeightCategory existingCategory = existingCategoryOpt.get();
+            existingCategory.setName(updatedCategory.getName());
+            existingCategory.setMinWeight(updatedCategory.getMinWeight());
+            existingCategory.setMaxWeight(updatedCategory.getMaxWeight());
+            weightCategoryRepository.save(existingCategory);
+            eventPublisher.publishEvent(new EntityAddedEvent(this, existingCategory, EntityOperationType.UPDATE));
             return "Category updated successfully!";
         }
         else throw new RuntimeException("Category with ID " + id + " not found!");
@@ -63,9 +83,13 @@ public class WeightCategoryService
 
     public void deleteWeightCategoryById(int id)
     {
-        if(weightCategoryRepository.existsById(id)) weightCategoryRepository.deleteById(id);
+        Optional<WeightCategory> categoryOpt = weightCategoryRepository.findById(id);
+        if(categoryOpt.isPresent())
+        {
+            WeightCategory category = categoryOpt.get();
+            weightCategoryRepository.deleteById(id);
+            eventPublisher.publishEvent(new EntityAddedEvent(this, category, EntityOperationType.DELETE));
+        }
         else throw new RuntimeException("Category with ID " + id + " not found!");
     }
-    public WeightCategory getWeightCategoryById(int id) {return weightCategoryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Weight category with ID " + id + " not found."));}
-    public WeightCategory getWeightCategoryByName(String name) {return weightCategoryRepository.findByName(name).orElse(null);}
 }

@@ -11,4 +11,10 @@ public class HomeController
 
     @GetMapping("/database")
     public String showDatabasePage() {return "database";}
+
+    @GetMapping("/addFight")
+    public String showAddFightPage() {return "addFight";}
+
+    @GetMapping("/myFights")
+    public String showMyFightsPage() {return "myFights";}
 }

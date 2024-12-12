@@ -21,4 +21,14 @@ public class MMAFight
     @ManyToOne
     @JoinColumn(name = "fighter_id", nullable = false)
     private MMAFighter fighter;
+
+    protected MMAFight() {}
+
+    public static MMAFight createMMAFight(Fight fight, MMAFighter fighter)
+    {
+        MMAFight mmaFight = new MMAFight();
+        mmaFight.setFight(fight);
+        mmaFight.setFighter(fighter);
+        return mmaFight;
+    }
 }
