@@ -13,12 +13,14 @@
 <body>
 <nav class="navbar navbar-expand-lg d-flex justify-content-between">
     <div class="d-flex align-items-center">
-        <a class="navbar-brand font-weight-bold" href="#" onclick="toggleInfo()">MMA Database</a>
+        <a class="navbar-brand font-weight-bold" href="#">MMA Database</a>
         <a class="btn btn-outline-secondary mx-2" th:href="@{/}">Main Page</a>
         <a class="btn btn-outline-secondary mx-2" th:href="@{/database}">Database</a>
     </div>
 
     <div class="d-flex align-items-center">
+        <a class="btn btn-outline-secondary mx-2" th:href="@{/addFight}" th:if="${userRole == 'coach'}">Announcement of a New Fight</a>
+        <a class="btn btn-outline-secondary mx-2" th:href="@{/myFights}" th:if="${userRole == 'fighter'}">My Fights</a>
         <button id="addCoachBtn" class="btn btn-outline-secondary mx-2" data-toggle="modal" data-target="#addCoachModal">Add Coach</button>
         <button id="addCategoryBtn" class="btn btn-outline-secondary mx-2" data-toggle="modal" data-target="#addCategoryModal">Add Category</button>
         <button id="addEventBtn" class="btn btn-outline-secondary mx-2" data-toggle="modal" data-target="#addEventModal">Add Event</button>
@@ -26,13 +28,35 @@
         <button id="addMMAFightBtn" class="btn btn-outline-secondary mx-2" data-toggle="modal" data-target="#addMMAFightModal">Add MMA Fight</button>
         <button id="addMMAFighterBtn" class="btn btn-outline-secondary mx-2" data-toggle="modal" data-target="#addMMAFighterModal">Add MMA Fighter</button>
         <button id="addPreparationBtn" class="btn btn-outline-secondary mx-2" data-toggle="modal" data-target="#addPreparationModal">Add Preparation</button>
-        <button id="addStatsBtn" class="btn btn-outline-secondary mx-2" data-toggle="modal" data-target="#addStatModal">Add Stats</button>
+        <button id="addStatsBtn" class="btn btn-outline-secondary mx-2" data-toggle="modal" data-target="#addStatModal">Add Stat</button>
         <button class="btn btn-outline-primary mx-2" id="login-button" data-toggle="modal" data-target="#loginModal">Login</button>
-        <i class="bi bi-person-circle mx-2" id="user-icon" style="display: none; font-size: 1.5rem;"></i>
+        <i class="bi bi-person-circle mx-2" id="user-icon" style="display: none;"></i>
         <span class="font-weight-bold mx-2" id="user-role" style="display: none;">Basic User</span>
         <button class="btn btn-outline-danger mx-2" id="logout-button" style="display: none;">Logout</button>
     </div>
 </nav>
+
+<div class="modal fade" id="fighterModal" tabindex="-1" role="dialog" aria-labelledby="fighterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="fighterModalLabel" class="modal-title">Fighter Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="fighter-image" src="" alt="Fighter Image" class="img-fluid mb-3">
+                <h4 id="fighter-fullname"></h4>
+                <h5 id="fighter-nationality"></h5>
+                <h5 id="fighter-weight-category"></h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -826,7 +850,7 @@
             <th>Coach ID</th>
             <th>Coach Name</th>
             <th>Specialization</th>
-            <th>Actions</th>
+            <th th:if="${userRole == 'admin'}">Actions</th>
         </tr>
         </thead>
         <tbody id="coaches-table-body">
@@ -841,7 +865,7 @@
             <th>MMA Organization</th>
             <th>Event Date</th>
             <th>Event Location</th>
-            <th>Actions</th>
+            <th th:if="${userRole == 'admin'}">Actions</th>
         </tr>
         </thead>
         <tbody id="events-table-body">
@@ -854,7 +878,7 @@
             <th>Category ID</th>
             <th>Name</th>
             <th>Weight Range</th>
-            <th>Actions</th>
+            <th th:if="${userRole == 'admin'}">Actions</th>
         </tr>
         </thead>
         <tbody id="weight_categories-table-body">
@@ -893,7 +917,7 @@
             <th>Submissions</th>
             <th>Decisions</th>
             <th>Fighter Name</th>
-            <th>Actions</th>
+            <th th:if="${userRole == 'admin'}">Actions</th>
         </tr>
         </thead>
         <tbody id="stats-table-body">
@@ -909,7 +933,7 @@
             <th>Club Region</th>
             <th>Fighter Name</th>
             <th>Coach Name</th>
-            <th>Actions</th>
+            <th th:if="${userRole == 'admin'}">Actions</th>
         </tr>
         </thead>
         <tbody id="preparations-table-body">
@@ -926,7 +950,7 @@
             <th>Weight Category</th>
             <th>Event</th>
             <th>Event Location</th>
-            <th>Actions</th>
+            <th th:if="${userRole == 'admin'}">Actions</th>
         </tr>
         </thead>
         <tbody id="fights-table-body">
@@ -940,7 +964,7 @@
             <th>Fight ID</th>
             <th>Fighter Name</th>
             <th>Weight Category</th>
-            <th>Actions</th>
+            <th th:if="${userRole == 'admin'}">Actions</th>
         </tr>
         </thead>
         <tbody id="mma-fights-table-body">
@@ -960,185 +984,5 @@
 <script src="/css_js/js/app.js"></script>
 <script src="/css_js/js/filters.js"></script>
 <script src="/css_js/js/CRUD.js"></script>
-<script>
-    function addStat(){
-        const wins = document.getElementById('addWins').value;
-        const losses = document.getElementById('addLosses').value;
-        const draws = document.getElementById('addDraws').value;
-        const kos = document.getElementById('addKos').value;
-        const tkos = document.getElementById('addTkos').value;
-        const submissions = document.getElementById('addSubmissions').value;
-        const decisions = document.getElementById('addDecisions').value;
-        const fighterId = document.getElementById('addFighterStatSelect').value;
-
-        if(!fighterId)
-        {
-            alert('Please select a fighter.');
-            return;
-        }
-
-        const stat = {
-            wins: parseInt(wins),
-            losses: parseInt(losses),
-            draws: parseInt(draws),
-            kos: parseInt(kos),
-            tkos: parseInt(tkos),
-            submissions: parseInt(submissions),
-            decisions: parseInt(decisions),
-            "mma-fighter": {fighterId: parseInt(fighterId)}
-        };
-
-        fetch('/api/stats/add', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(stat)
-        })
-            .then(response =>
-            {
-                if(response.ok)
-                {
-                    $('#addStatModal').modal('hide');
-                    fetchStats();
-                    alert('Stat added successfully!');
-                    document.getElementById('addStatForm').reset();
-                }
-                else response.text().then(text => alert('Error adding stat: ' + text));
-            })
-            .catch(error =>
-            {
-                console.error('Error adding stat:', error);
-                alert('Error adding stat.');
-            });
-    }
-
-    function editStat(id){
-        fetch(`/api/stats/all`)
-            .then(response => response.json())
-            .then(data =>
-            {
-                const stat = data.find(s => s.statsId === id);
-                if(stat)
-                {
-                    document.getElementById('editStatsId').value = stat.statsId;
-                    document.getElementById('editWins').value = stat.wins;
-                    document.getElementById('editLosses').value = stat.losses;
-                    document.getElementById('editDraws').value = stat.draws;
-                    document.getElementById('editKos').value = stat.kos;
-                    document.getElementById('editTkos').value = stat.tkos;
-                    document.getElementById('editSubmissions').value = stat.submissions;
-                    document.getElementById('editDecisions').value = stat.decisions;
-                    document.getElementById('editFighterStatSelect').value = stat['mma-fighter']?.fighterId || '';
-                    $('#editStatModal').modal('show');
-                }
-                else alert('Stat not found.');
-            })
-            .catch(error =>
-            {
-                console.error('Error fetching stats for edit:', error);
-                alert('Error fetching stat data.');
-            });
-    }
-
-    function saveStatChanges(){
-        const statsId = document.getElementById('editStatsId').value;
-        const wins = document.getElementById('editWins').value;
-        const losses = document.getElementById('editLosses').value;
-        const draws = document.getElementById('editDraws').value;
-        const kos = document.getElementById('editKos').value;
-        const tkos = document.getElementById('editTkos').value;
-        const submissions = document.getElementById('editSubmissions').value;
-        const decisions = document.getElementById('editDecisions').value;
-        const fighterId = document.getElementById('editFighterStatSelect').value;
-
-        if(!fighterId)
-        {
-            alert('Please select a fighter.');
-            return;
-        }
-
-        const stat = {
-            statsId: parseInt(statsId),
-            wins: parseInt(wins),
-            losses: parseInt(losses),
-            draws: parseInt(draws),
-            kos: parseInt(kos),
-            tkos: parseInt(tkos),
-            submissions: parseInt(submissions),
-            decisions: parseInt(decisions),
-            "mma-fighter": {fighterId: parseInt(fighterId)}
-        };
-
-        fetch(`/api/stats/update/${statsId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(stat)
-        })
-            .then(response =>
-            {
-                if(response.ok)
-                {
-                    $('#editStatModal').modal('hide');
-                    fetchStats();
-                    alert('Stat updated successfully!');
-                }
-                else response.text().then(text => alert('Error updating stat: ' + text));
-            })
-            .catch(error =>
-            {
-                console.error('Error updating stat:', error);
-                alert('Error updating stat.');
-            });
-    }
-
-    function deleteStat(id){
-        if(!confirm('Are you sure you want to delete this Stat?')) return;
-
-        fetch(`/api/stats/delete/${id}`, {
-            method: 'DELETE'
-        })
-            .then(response =>
-            {
-                if(!response.ok) return response.text().then(text => { throw new Error(text) });
-                alert('Stat deleted successfully!');
-                fetchStats();
-            })
-            .catch(error =>
-            {
-                console.error('Error deleting stat:', error);
-                alert('Error deleting stat: ' + error.message);
-            });
-    }
-
-    function populateFightersstats(selectId){
-        fetch('/api/mma-fighters/all')
-            .then(response => response.json())
-            .then(data =>
-            {
-                const selectElement = document.getElementById(selectId);
-                selectElement.innerHTML = '<option value="">Select Fighter</option>';
-                data.forEach(fighter =>
-                {
-                    const option = document.createElement('option');
-                    option.value = fighter.fighterId;
-                    option.textContent = `${fighter.first_name} ${fighter.last_name}`;
-                    selectElement.appendChild(option);
-                });
-            })
-            .catch(error =>
-            {
-                console.error('Error fetching fighters:', error);
-                alert('Error loading fighters.');
-            });
-    }
-
-    $(document).ready(function(){
-        populateFightersstats('addFighterStatSelect');
-        populateFightersstats('editFighterStatSelect');
-    });
-</script>
 </body>
 </html>

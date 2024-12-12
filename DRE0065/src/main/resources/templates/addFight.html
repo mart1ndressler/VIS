@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Announce New Fight</title>
+    <link rel="icon" href="/css_js/images/logo.png" type="image/png">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css_js/css/styles.css">
+    <meta name="_csrf" content="{{_csrf.token}}">
+    <style>
+        .fighters-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 100px;
+        }
+        .fighter-select-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 40px;
+        }
+        .fighter-select-container img {
+            width: 300px;
+            height: auto;
+            margin-top: 50px;
+        }
+        .fighter-right img {
+            transform: scaleX(-1);
+        }
+        .vs-text {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 0 40px;
+        }
+        #announceFightBtn{
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg d-flex justify-content-between">
+    <div class="d-flex align-items-center">
+        <a class="navbar-brand font-weight-bold" href="#">MMA Fighters Database</a>
+        <a class="btn btn-outline-secondary mx-2" th:href="@{/}">Main Page</a>
+        <a class="btn btn-outline-secondary mx-2" th:href="@{/database}">Database</a>
+    </div>
+
+    <div class="d-flex align-items-center" id="user-section">
+        <a class="btn btn-outline-secondary mx-2" id="addFightButton" th:href="@{/addFight}" th:if="${userRole == 'coach'}">Announcement of a New Fight</a>
+        <div class="d-flex align-items-center" th:if="${userRole == 'coach'}">
+            <i class="bi bi-person-circle mx-2" id="user-icon"></i>
+            <span class="font-weight-bold mx-2" id="user-name" th:text="${user.firstName} + ' ' + ${user.lastName}">Coach Name</span>
+        </div>
+    </div>
+</nav>
+
+<div class="fighters-container">
+    <div class="fighter-select-container fighter-left">
+        <label for="fighter1">FIGHTER 1</label>
+        <select id="fighter1" class="form-control">
+            <option value="">-- Select Fighter --</option>
+        </select>
+        <img id="fighter1-img" src="" alt="Fighter 1" style="display:none;">
+    </div>
+    <div class="vs-text">VS.</div>
+    <div class="fighter-select-container fighter-right">
+        <label for="fighter2">FIGHTER 2</label>
+        <select id="fighter2" class="form-control">
+            <option value="">-- Select Fighter --</option>
+        </select>
+        <img id="fighter2-img" src="" alt="Fighter 2" style="display:none;">
+    </div>
+</div>
+
+<!-- Přidáváme tlačítko "Announce New Fight" pod výběrem fighterů -->
+<div class="text-center mt-5">
+    <button class="btn btn-primary" id="announceFightBtn">Announce New Fight</button>
+</div>
+
+<footer>
+    <p>© 2024 MMA Database</p>
+    <p>Created by Martin Dressler, DRE0065</p>
+</footer>
+
+<!-- Modal pro vytvoření nového Fightu -->
+<div class="modal fade" id="newFightModal" tabindex="-1" role="dialog" aria-labelledby="newFightModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="newFightForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newFightModalLabel">New Fight Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Fighter 1</label>
+                        <input type="text" class="form-control" id="modal-fighter1-name" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Fighter 2</label>
+                        <input type="text" class="form-control" id="modal-fighter2-name" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Weight Category</label>
+                        <input type="text" class="form-control" id="modal-weight-category" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Result</label>
+                        <input type="text" class="form-control" value="Upcoming" id="modal-result" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Type of Result</label>
+                        <input type="text" class="form-control" value="Upcoming" id="modal-typeOfResult" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Fight Date and Time</label>
+                        <input type="datetime-local" class="form-control" id="modal-fight-date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Event</label>
+                        <select id="modal-event-select" class="form-control" required>
+                            <option value="">-- Select Event --</option>
+                        </select>
+                    </div>
+
+                    <!-- Přidáváme zobrazení start a end doby eventu jako text na jednom řádku -->
+                    <div class="form-group">
+                        <p id="modal-event-times" class="mb-1"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Fight (not working now)</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Login Modal byl odstraněn -->
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const fighter1Select = document.getElementById('fighter1');
+        const fighter2Select = document.getElementById('fighter2');
+        const fighter1Img = document.getElementById('fighter1-img');
+        const fighter2Img = document.getElementById('fighter2-img');
+        const announceFightBtn = document.getElementById('announceFightBtn');
+
+        let fightersData = [];
+        let eventsData = [];
+
+        // Načtení fighterů
+        fetch('/api/mma-fighters/all')
+            .then(response => response.json())
+            .then(fighters => {
+                fightersData = fighters;
+                fighters.forEach(f => {
+                    const option1 = document.createElement('option');
+                    option1.value = f.fighterId;
+                    option1.text = f.first_name + ' ' + f.last_name;
+                    fighter1Select.appendChild(option1);
+
+                    const option2 = document.createElement('option');
+                    option2.value = f.fighterId;
+                    option2.text = f.first_name + ' ' + f.last_name;
+                    fighter2Select.appendChild(option2);
+                });
+            })
+            .catch(error => console.error('Error fetching fighters:', error));
+
+        // Načtení eventů
+        fetch('/api/events/all')
+            .then(response => response.json())
+            .then(events => {
+                eventsData = events;
+            })
+            .catch(error => console.error('Error fetching events:', error));
+
+        // Zobrazení obrázku fightera 1
+        fighter1Select.addEventListener('change', function() {
+            const fighterId = fighter1Select.value;
+            if (fighterId) {
+                fighter1Img.src = 'css_js/images/' + fighterId + '.png';
+                fighter1Img.style.display = 'block';
+            } else {
+                fighter1Img.style.display = 'none';
+            }
+        });
+
+        // Zobrazení obrázku fightera 2
+        fighter2Select.addEventListener('change', function() {
+            const fighterId = fighter2Select.value;
+            if (fighterId) {
+                fighter2Img.src = 'css_js/images/' + fighterId + '.png';
+                fighter2Img.style.display = 'block';
+            } else {
+                fighter2Img.style.display = 'none';
+            }
+        });
+
+        // Kliknutí na tlačítko "Announce New Fight"
+        announceFightBtn.addEventListener('click', function() {
+            const f1Id = fighter1Select.value;
+            const f2Id = fighter2Select.value;
+
+            // Kontrola, zda jsou oba fighteri vybráni
+            if(!f1Id || !f2Id) {
+                alert("Please select both fighters!");
+                return;
+            }
+
+            const f1 = fightersData.find(x => x.fighterId == f1Id);
+            const f2 = fightersData.find(x => x.fighterId == f2Id);
+
+            if(!f1 || !f2) {
+                alert("Could not find fighter data!");
+                return;
+            }
+
+            // Kontrola váhové kategorie
+            if(f1.weight_category_id.name !== f2.weight_category_id.name) {
+                alert("These fighters are not in the same weight category! Cannot announce fight.");
+                return;
+            }
+
+            // Pokud jsou ve stejné váhové kategorii, otevřeme modal
+            const modalFighter1Name = document.getElementById('modal-fighter1-name');
+            const modalFighter2Name = document.getElementById('modal-fighter2-name');
+            const modalWeightCategory = document.getElementById('modal-weight-category');
+            const modalEventSelect = document.getElementById('modal-event-select');
+            const modalFightDate = document.getElementById('modal-fight-date');
+            const modalEventTimes = document.getElementById('modal-event-times');
+
+            // Předvyplnění informací o fighterech a váhové kategorii
+            modalFighter1Name.value = f1.first_name + ' ' + f1.last_name;
+            modalFighter2Name.value = f2.first_name + ' ' + f2.last_name;
+            modalWeightCategory.value = f1.weight_category_id.name;
+
+            // Naplnění eventů do selectu
+            modalEventSelect.innerHTML = '<option value="">-- Select Event --</option>';
+            eventsData.forEach(evt => {
+                const opt = document.createElement('option');
+                opt.value = evt.eventId;
+                opt.text = evt.eventName + ' (' + evt.location + ')';
+                opt.setAttribute('data-start', evt.startOfEvent);
+                opt.setAttribute('data-end', evt.endOfEvent);
+                modalEventSelect.appendChild(opt);
+            });
+
+            // Resetování zobrazení start a end doby eventu
+            modalEventTimes.innerText = '';
+
+            // Otevření modalu
+            $('#newFightModal').modal('show');
+        });
+
+        const modalEventSelect = document.getElementById('modal-event-select');
+        const modalFightDate = document.getElementById('modal-fight-date');
+        const modalEventTimes = document.getElementById('modal-event-times');
+
+        // Zobrazení start a end doby eventu po výběru eventu
+        modalEventSelect.addEventListener('change', function() {
+            const eventId = modalEventSelect.value;
+            if(!eventId) {
+                modalEventTimes.innerText = '';
+                return; // nic nevybráno
+            }
+
+            const selectedOpt = modalEventSelect.querySelector('option[value="'+eventId+'"]');
+            const startOfEvent = new Date(selectedOpt.getAttribute('data-start'));
+            const endOfEvent = new Date(selectedOpt.getAttribute('data-end'));
+
+            // Formátování datumu pro zobrazení
+            const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' };
+            const formattedStart = startOfEvent.toLocaleDateString(undefined, options);
+            const formattedEnd = endOfEvent.toLocaleDateString(undefined, options);
+            modalEventTimes.innerText = formattedStart + ' - ' + formattedEnd;
+
+            // Kontrola, zda fight date spadá do období eventu
+            if(modalFightDate.value) {
+                const fightDate = new Date(modalFightDate.value);
+                if(fightDate < startOfEvent || fightDate > endOfEvent) {
+                    alert("Selected fight date/time is not within the event period!");
+                }
+            }
+        });
+
+        // Kontrola fight date při změně fight date
+        modalFightDate.addEventListener('change', function() {
+            const eventId = modalEventSelect.value;
+            if(!eventId) return;
+
+            const selectedOpt = modalEventSelect.querySelector('option[value="'+eventId+'"]');
+            const startOfEvent = new Date(selectedOpt.getAttribute('data-start'));
+            const endOfEvent = new Date(selectedOpt.getAttribute('data-end'));
+
+            const fightDate = new Date(modalFightDate.value);
+            if(fightDate < startOfEvent || fightDate > endOfEvent) {
+                alert("Selected fight date/time is not within the event period!");
+            }
+        });
+
+        // Odeslání formuláře pro nový fight (zatím nefunguje)
+        const newFightForm = document.getElementById('newFightForm');
+        newFightForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Zatím nic neděláme, jen log
+            console.log("Add Fight clicked, but not implemented yet.");
+            $('#newFightModal').modal('hide');
+        });
+    });
+</script>
+</body>
+</html>

@@ -32,7 +32,9 @@ function showCoaches(){
     hideFilters();
     hideCRUDBtns();
     document.getElementById('coaches-table').style.display = 'table';
-    document.getElementById('addCoachBtn').style.display = 'block';
+    if(getUserRole() === 'admin') {
+        document.getElementById('addCoachBtn').style.display = 'block';
+    }
     fetchCoaches();
 }
 
@@ -41,7 +43,9 @@ function showEvents(){
     hideFilters();
     hideCRUDBtns();
     document.getElementById('events-table').style.display = 'table';
-    document.getElementById('addEventBtn').style.display = 'block';
+    if(getUserRole() === 'admin') {
+        document.getElementById('addEventBtn').style.display = 'block';
+    }
     fetchEvents();
 }
 
@@ -50,7 +54,9 @@ function showWeightCategories(){
     hideFilters();
     hideCRUDBtns();
     document.getElementById('weight_categories-table').style.display = 'table';
-    document.getElementById('addCategoryBtn').style.display = 'block';
+    if(getUserRole() === 'admin') {
+        document.getElementById('addCategoryBtn').style.display = 'block';
+    }
     fetchCategories();
 }
 
@@ -60,7 +66,9 @@ function showMMAFighters(){
     hideCRUDBtns();
     document.getElementById('mma_fighters-table').style.display = 'table';
     document.getElementById('mma-fighter-filters').style.display = 'block';
-    document.getElementById('addMMAFighterBtn').style.display = 'block';
+    if(getUserRole() === 'admin') {
+        document.getElementById('addMMAFighterBtn').style.display = 'block';
+    }
     fetchMMAFighters();
 }
 
@@ -71,7 +79,9 @@ function showStats(){
     fetchWins();
     document.getElementById('stats-table').style.display = 'table';
     document.getElementById('stats-filters').style.display = 'block';
-    document.getElementById('addStatsBtn').style.display = 'block';
+    if(getUserRole() === 'admin') {
+        document.getElementById('addStatsBtn').style.display = 'block';
+    }
     fetchStats();
 }
 
@@ -80,7 +90,9 @@ function showPreparations(){
     hideFilters();
     hideCRUDBtns();
     document.getElementById('preparations-table').style.display = 'table';
-    document.getElementById('addPreparationBtn').style.display = 'block';
+    if(getUserRole() === 'admin') {
+        document.getElementById('addPreparationBtn').style.display = 'block';
+    }
     fetchPreparations();
 }
 
@@ -89,7 +101,9 @@ function showFights(){
     hideFilters();
     hideCRUDBtns();
     document.getElementById('fights-table').style.display = 'table';
-    document.getElementById('addFightBtn').style.display = 'block';
+    if(getUserRole() === 'admin') {
+        document.getElementById('addFightBtn').style.display = 'block';
+    }
     fetchFights();
 }
 
@@ -98,33 +112,51 @@ function showMMAFights(){
     hideFilters();
     hideCRUDBtns();
     document.getElementById('mma-fights-table').style.display = 'table';
-    document.getElementById('addMMAFightBtn').style.display = 'block';
+    if(getUserRole() === 'admin') {
+        document.getElementById('addMMAFightBtn').style.display = 'block';
+    }
     fetchMMAFights();
 }
 
 function fetchCoaches(){
+    const storedUser = localStorage.getItem('user');
+    const user = storedUser ? JSON.parse(storedUser) : { role: 'basic' };
+    const userRole = user.role;
+
     fetch('/api/coaches/all')
         .then(response => response.json())
         .then(data =>
         {
             const tableBody = document.getElementById('coaches-table-body');
+            if(!tableBody)
+            {
+                console.error('Table body for coaches not found.');
+                return;
+            }
             tableBody.innerHTML = '';
             data.forEach(coach =>
             {
                 const row = document.createElement('tr');
+
                 row.innerHTML = `
-                        <td>${coach.coachId}</td>
-                        <td>${coach.firstName} ${coach.lastName}</td>
-                        <td>${coach.specialization}</td>
-                        <td>
-                            <a href="#" onclick="editCoach(${coach.coachId})" class="bttns">
-                                <i class="bi bi-pencil-square"></i>
-                            </a>
-                            <a href="#" onclick="deleteCoachHandler(${coach.coachId})" class="bttns">
-                                <i class="bi bi-trash"></i>
-                            </a>
-                        </td>
+                    <td>${coach.coachId}</td>
+                    <td>${coach.firstName} ${coach.lastName}</td>
+                    <td>${coach.specialization}</td>
+                `;
+
+                if(userRole === 'admin')
+                {
+                    const actionTd = document.createElement('td');
+                    actionTd.innerHTML = `
+                        <a href="#" onclick="editCoach(${coach.coachId})" class="bttns">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a href="#" onclick="deleteCoachHandler(${coach.coachId})" class="bttns">
+                            <i class="bi bi-trash"></i>
+                        </a>
                     `;
+                    row.appendChild(actionTd);
+                }
                 tableBody.appendChild(row);
             });
         })
@@ -132,11 +164,20 @@ function fetchCoaches(){
 }
 
 function fetchEvents(){
+    const storedUser = localStorage.getItem('user');
+    const user = storedUser ? JSON.parse(storedUser) : { role: 'basic' };
+    const userRole = user.role;
+
     fetch('/api/events/all')
         .then(response => response.json())
         .then(data =>
         {
             const tableBody = document.getElementById('events-table-body');
+            if(!tableBody)
+            {
+                console.error('Table body for events not found.');
+                return;
+            }
             tableBody.innerHTML = '';
             data.forEach(event =>
             {
@@ -147,15 +188,21 @@ function fetchEvents(){
                     <td>${event.mmaOrganization}</td>
                     <td>${new Date(event.startOfEvent).toLocaleString()} - ${new Date(event.endOfEvent).toLocaleString()}</td>
                     <td>${event.location}</td>
-                    <td>
+                `;
+
+                if(userRole === 'admin')
+                {
+                    const actionTd = document.createElement('td');
+                    actionTd.innerHTML = `
                         <a href="#" onclick="editEvent(${event.eventId})" class="bttns">
                             <i class="bi bi-pencil-square"></i>
                         </a>
                         <a href="#" onclick="deleteEvent(${event.eventId})" class="bttns">
                             <i class="bi bi-trash"></i>
                         </a>
-                    </td>
-                `;
+                    `;
+                    row.appendChild(actionTd);
+                }
                 tableBody.appendChild(row);
             });
         })
@@ -163,6 +210,10 @@ function fetchEvents(){
 }
 
 function fetchCategories(){
+    const storedUser = localStorage.getItem('user');
+    const user = storedUser ? JSON.parse(storedUser) : { role: 'basic' };
+    const userRole = user.role;
+
     fetch('/api/weight_categories/all')
         .then(response => response.text())
         .then(data =>
@@ -171,6 +222,11 @@ function fetchCategories(){
             {
                 let parsedData = JSON.parse(data);
                 const tableBody = document.getElementById('weight_categories-table-body');
+                if(!tableBody)
+                {
+                    console.error('Table body for weight categories not found.');
+                    return;
+                }
                 tableBody.innerHTML = '';
                 parsedData.forEach(category =>
                 {
@@ -179,15 +235,21 @@ function fetchCategories(){
                         <td>${category.weightCategoryId}</td>
                         <td>${category.name}</td>
                         <td>${category.minWeight} - ${category.maxWeight}</td>
-                        <td>
+                    `;
+
+                    if(userRole === 'admin')
+                    {
+                        const actionTd = document.createElement('td');
+                        actionTd.innerHTML = `
                             <a href="#" onclick="editCategory(${category.weightCategoryId})" class="bttns">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
                             <a href="#" onclick="deleteCategory(${category.weightCategoryId})" class="bttns">
                                 <i class="bi bi-trash"></i>
                             </a>
-                        </td>
-                    `;
+                        `;
+                        row.appendChild(actionTd);
+                    }
                     tableBody.appendChild(row);
                 });
             }
@@ -197,52 +259,100 @@ function fetchCategories(){
 }
 
 function fetchMMAFighters(){
+    const storedUser = localStorage.getItem('user');
+    const user = storedUser ? JSON.parse(storedUser) : { role: 'basic' };
+    const userRole = user.role;
+
     fetch('/api/mma-fighters/all')
-        .then(response => response.text())
-        .then(data =>
+        .then(response => response.json())
+        .then(fighters =>
         {
-            try
+            const tableBody = document.getElementById('mma_fighters-table-body');
+            if(!tableBody)
             {
-                const fighters = JSON.parse(data);
-                const tableBody = document.getElementById('mma_fighters-table-body');
-                tableBody.innerHTML = '';
-                fighters.forEach(fighter =>
-                {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${fighter.fighterId}</td>
-                        <td>${fighter.first_name} ${fighter.last_name}</td>
-                        <td>${fighter.weight}</td>
-                        <td>${fighter.height}</td>
-                        <td>${fighter.reach}</td>
-                        <td>${fighter.nationality}</td>
-                        <td>${fighter.ranking}</td>
-                        <td>${fighter.fights}</td>
-                        <td>${fighter.points}</td>
-                        <td>${fighter.weight_category_id.name || 'N/A'}</td>
-                        <td>
-                            <a href="#" onclick="editMMAFighter(${fighter.fighterId})" class="bttns">
-                                <i class="bi bi-pencil-square"></i>
-                            </a>
-                            <a href="#" onclick="deleteMMAFighter(${fighter.fighterId})" class="bttns">
-                                <i class="bi bi-trash"></i>
-                            </a>
-                        </td>
-                    `;
-                    tableBody.appendChild(row);
-                });
+                console.error('Table body for MMA fighters not found.');
+                return;
             }
-            catch(error) {console.error("Error parsing JSON:", error);}
+            tableBody.innerHTML = '';
+            fighters.forEach(fighter =>
+            {
+                const userRole = getUserRole();
+                let actions = `
+                    <a href="#" onclick="viewMMAFighter(${fighter.fighterId}, '${fighter.first_name}', '${fighter.last_name}', '${fighter.nationality}', '${fighter.weight_category_id.name}')" class="bttns">
+                        <i class="bi bi-search"></i>
+                    </a>
+                `;
+
+                if(userRole === 'admin')
+                {
+                    actions += `
+                        <a href="#" onclick="editMMAFighter(${fighter.fighterId})" class="bttns">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a href="#" onclick="deleteMMAFighter(${fighter.fighterId})" class="bttns">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    `;
+                }
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${fighter.fighterId}</td>
+                    <td>${fighter.first_name} ${fighter.last_name}</td>
+                    <td>${fighter.weight}</td>
+                    <td>${fighter.height}</td>
+                    <td>${fighter.reach}</td>
+                    <td>${fighter.nationality}</td>
+                    <td>${fighter.ranking}</td>
+                    <td>${fighter.fights}</td>
+                    <td>${fighter.points}</td>
+                    <td>${fighter.weight_category_id.name || 'N/A'}</td>
+                    <td>
+                        ${actions}
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
         })
         .catch(error => console.error('Error fetching MMA fighters:', error));
 }
 
+function viewMMAFighter(fighterId, firstName, lastName, nationality, weightCategoryName) {
+    const imagePath = `css_js/images/${fighterId}.png`;
+    const fighterImage = document.getElementById('fighter-image');
+    const fighterFullname = document.getElementById('fighter-fullname');
+    const fighterNationality = document.getElementById('fighter-nationality');
+    const fighterWeightCategory = document.getElementById('fighter-weight-category');
+
+    fighterImage.src = imagePath;
+    fighterImage.alt = `${firstName} ${lastName}`;
+    fighterFullname.innerText = `${firstName} ${lastName}`;
+    fighterNationality.innerText = `Nationality: ${nationality}`;
+    fighterWeightCategory.innerText = `Weight Category: ${weightCategoryName}`;
+
+    fighterImage.onerror = function()
+    {
+        this.onerror = null;
+        this.src = '/css_js/images/logo.png';
+    };
+
+    $('#fighterModal').modal('show');
+}
+
 function fetchStats(){
+    const storedUser = localStorage.getItem('user');
+    const user = storedUser ? JSON.parse(storedUser) : { role: 'basic' };
+    const userRole = user.role;
+
     fetch('/api/stats/all')
         .then(response => response.json())
         .then(data =>
         {
             const tableBody = document.getElementById('stats-table-body');
+            if(!tableBody)
+            {
+                console.error('Table body for stats not found.');
+                return;
+            }
             tableBody.innerHTML = '';
             data.forEach(stats =>
             {
@@ -257,15 +367,21 @@ function fetchStats(){
                         <td>${stats.submissions}</td>
                         <td>${stats.decisions}</td>
                         <td>${stats['mma-fighter']?.first_name} ${stats['mma-fighter']?.last_name || 'N/A'}</td>
-                        <td>
-                            <a href="#" onclick="editStat(${stats.statsId})" class="bttns">
-                                <i class="bi bi-pencil-square"></i>
-                            </a>
-                            <a href="#" onclick="deleteStat(${stats.statsId})" class="bttns">
-                                <i class="bi bi-trash"></i>
-                            </a>
-                        </td>
                     `;
+
+                if(userRole === 'admin')
+                {
+                    const actionTd = document.createElement('td');
+                    actionTd.innerHTML = `
+                        <a href="#" onclick="editStat(${stats.statsId})" class="bttns">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a href="#" onclick="deleteStat(${stats.statsId})" class="bttns">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    `;
+                    row.appendChild(actionTd);
+                }
                 tableBody.appendChild(row);
             });
         })
@@ -273,11 +389,20 @@ function fetchStats(){
 }
 
 function fetchPreparations(){
+    const storedUser = localStorage.getItem('user');
+    const user = storedUser ? JSON.parse(storedUser) : { role: 'basic' };
+    const userRole = user.role;
+
     fetch('/api/preparations/all')
         .then(response => response.json())
         .then(data =>
         {
             const tableBody = document.getElementById('preparations-table-body');
+            if(!tableBody)
+            {
+                console.error('Table body for preparations not found.');
+                return;
+            }
             tableBody.innerHTML = '';
             data.forEach(preparation =>
             {
@@ -289,15 +414,21 @@ function fetchPreparations(){
                     <td>${preparation.club_region}</td>
                     <td>${preparation['mma-fighter']?.first_name} ${preparation['mma-fighter']?.last_name || 'N/A'}</td>
                     <td>${(preparation.coach.firstName && preparation.coach.lastName) ? preparation.coach.firstName + ' ' + preparation.coach.lastName : 'N/A'}</td>
-                    <td>
+                `;
+
+                if(userRole === 'admin')
+                {
+                    const actionTd = document.createElement('td');
+                    actionTd.innerHTML = `
                         <a href="#" onclick="editPreparation(${preparation.preparationId})" class="bttns">
                             <i class="bi bi-pencil-square"></i>
                         </a>
                         <a href="#" onclick="deletePreparation(${preparation.preparationId})" class="bttns">
                             <i class="bi bi-trash"></i>
                         </a>
-                    </td>
-                `;
+                    `;
+                    row.appendChild(actionTd);
+                }
                 tableBody.appendChild(row);
             });
         })
@@ -305,11 +436,20 @@ function fetchPreparations(){
 }
 
 function fetchFights(){
+    const storedUser = localStorage.getItem('user');
+    const user = storedUser ? JSON.parse(storedUser) : { role: 'basic' };
+    const userRole = user.role;
+
     fetch('/api/fights/all')
         .then(response => response.json())
         .then(data =>
         {
             const tableBody = document.getElementById('fights-table-body');
+            if(!tableBody)
+            {
+                console.error('Table body for fights not found.');
+                return;
+            }
             tableBody.innerHTML = '';
             data.forEach(fight =>
             {
@@ -322,15 +462,22 @@ function fetchFights(){
                     <td>${fight.weight_category.name || 'N/A'}</td>
                     <td>${fight.event.eventName || 'N/A'}</td>
                     <td>${fight.event.location || 'N/A'}</td>
-                    <td>
+                `;
+
+                if(userRole === 'admin')
+                {
+                    const actionTd = document.createElement('td');
+                    actionTd.innerHTML = `
                         <a href="#" onclick="editFight(${fight.fightId})" class="bttns">
                             <i class="bi bi-pencil-square"></i>
                         </a>
                         <a href="#" onclick="deleteFight(${fight.fightId})" class="bttns">
                             <i class="bi bi-trash"></i>
                         </a>
-                    </td>
-                `;
+                    `;
+                    row.appendChild(actionTd);
+                }
+
                 tableBody.appendChild(row);
             });
         })
@@ -338,11 +485,20 @@ function fetchFights(){
 }
 
 function fetchMMAFights(){
+    const storedUser = localStorage.getItem('user');
+    const user = storedUser ? JSON.parse(storedUser) : { role: 'basic' };
+    const userRole = user.role;
+
     fetch('/api/mmafights/all')
         .then(response => response.json())
         .then(data =>
         {
             const tableBody = document.getElementById('mma-fights-table-body');
+            if(!tableBody)
+            {
+                console.error('Table body for MMA fights not found.');
+                return;
+            }
             tableBody.innerHTML = '';
             data.forEach(mmaFight =>
             {
@@ -352,17 +508,28 @@ function fetchMMAFights(){
                     <td>${mmaFight.fight.fightId}</td>
                     <td>${mmaFight.fighter.first_name} ${mmaFight.fighter.last_name}</td>
                     <td>${mmaFight.fight.weight_category?.name || 'N/A'}</td>
-                    <td>
+                `;
+
+                if(userRole === 'admin')
+                {
+                    const actionTd = document.createElement('td');
+                    actionTd.innerHTML = `
                         <a href="#" onclick="editMMAFight(${mmaFight.mmaFightId})" class="bttns">
                             <i class="bi bi-pencil-square"></i>
                         </a>
                         <a href="#" onclick="deleteMMAFight(${mmaFight.mmaFightId})" class="bttns">
                             <i class="bi bi-trash"></i>
                         </a>
-                    </td>
-                `;
+                    `;
+                    row.appendChild(actionTd);
+                }
                 tableBody.appendChild(row);
             });
         })
         .catch(error => console.error('Error fetching MMAFights:', error));
+}
+
+function getUserRole(){
+    const user = JSON.parse(localStorage.getItem('user'));
+    return user ? user.role : null;
 }

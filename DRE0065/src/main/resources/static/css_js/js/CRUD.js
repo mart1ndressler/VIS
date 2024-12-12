@@ -207,7 +207,7 @@ function saveCategoryEdit(){
 }
 
 function deleteCategory(id){
-    if (!confirm('Are you sure you want to delete this category?')) return;
+    if(!confirm('Are you sure you want to delete this category?')) return;
 
     fetch(`/api/weight_categories/delete/${id}`, {
         method: 'DELETE',
@@ -339,7 +339,7 @@ function formatDateTime(dateTime){
 }
 
 function deleteEvent(id){
-    if (!confirm('Are you sure you want to delete this event?')) return;
+    if(!confirm('Are you sure you want to delete this event?')) return;
 
     fetch(`/api/events/delete/${id}`, {
         method: 'DELETE',
@@ -413,7 +413,6 @@ function editMMAFighter(fighterId){
                     });
                 })
                 .catch(error => console.error('Error fetching weight categories:', error));
-
             $('#editMMAFighterModal').modal('show');
         })
         .catch(error => console.error('Error fetching fighter:', error));
@@ -975,10 +974,6 @@ function deleteFight(fightId){
         });
 }
 
-// document.addEventListener('DOMContentLoaded', function(){
-//     fetchFights();
-// });
-
 function populateFights(selectId, selectedFightId = null){
     return fetch('/api/fights/all')
         .then(response =>
@@ -1058,8 +1053,8 @@ function addMMAFight(){
         },
         body: JSON.stringify(payload)
     })
-        .then(response => {
-
+        .then(response =>
+        {
             if(!response.ok) return response.text().then(text => {throw new Error(text)});
             return response.text();
         })
@@ -1181,4 +1176,183 @@ $('#editMMAFightModal').on('show.bs.modal', function (){
     populateFights('editFightSelect')
         .then(() => populateFighters('editFighterSelect'))
         .catch(error => console.error('Error populating selects:', error));
+});
+
+function addStat(){
+    const wins = document.getElementById('addWins').value;
+    const losses = document.getElementById('addLosses').value;
+    const draws = document.getElementById('addDraws').value;
+    const kos = document.getElementById('addKos').value;
+    const tkos = document.getElementById('addTkos').value;
+    const submissions = document.getElementById('addSubmissions').value;
+    const decisions = document.getElementById('addDecisions').value;
+    const fighterId = document.getElementById('addFighterStatSelect').value;
+
+    if(!fighterId)
+    {
+        alert('Please select a fighter.');
+        return;
+    }
+
+    const stat = {
+        wins: parseInt(wins),
+        losses: parseInt(losses),
+        draws: parseInt(draws),
+        kos: parseInt(kos),
+        tkos: parseInt(tkos),
+        submissions: parseInt(submissions),
+        decisions: parseInt(decisions),
+        "mma-fighter": {fighterId: parseInt(fighterId)}
+    };
+
+    fetch('/api/stats/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(stat)
+    })
+        .then(response =>
+        {
+            if(response.ok)
+            {
+                $('#addStatModal').modal('hide');
+                fetchStats();
+                alert('Stat added successfully!');
+                document.getElementById('addStatForm').reset();
+            }
+            else response.text().then(text => alert('Error adding stat: ' + text));
+        })
+        .catch(error =>
+        {
+            console.error('Error adding stat:', error);
+            alert('Error adding stat.');
+        });
+}
+
+function editStat(id){
+    fetch(`/api/stats/all`)
+        .then(response => response.json())
+        .then(data =>
+        {
+            const stat = data.find(s => s.statsId === id);
+            if(stat)
+            {
+                document.getElementById('editStatsId').value = stat.statsId;
+                document.getElementById('editWins').value = stat.wins;
+                document.getElementById('editLosses').value = stat.losses;
+                document.getElementById('editDraws').value = stat.draws;
+                document.getElementById('editKos').value = stat.kos;
+                document.getElementById('editTkos').value = stat.tkos;
+                document.getElementById('editSubmissions').value = stat.submissions;
+                document.getElementById('editDecisions').value = stat.decisions;
+                document.getElementById('editFighterStatSelect').value = stat['mma-fighter']?.fighterId || '';
+                $('#editStatModal').modal('show');
+            }
+            else alert('Stat not found.');
+        })
+        .catch(error =>
+        {
+            console.error('Error fetching stats for edit:', error);
+            alert('Error fetching stat data.');
+        });
+}
+
+function saveStatChanges(){
+    const statsId = document.getElementById('editStatsId').value;
+    const wins = document.getElementById('editWins').value;
+    const losses = document.getElementById('editLosses').value;
+    const draws = document.getElementById('editDraws').value;
+    const kos = document.getElementById('editKos').value;
+    const tkos = document.getElementById('editTkos').value;
+    const submissions = document.getElementById('editSubmissions').value;
+    const decisions = document.getElementById('editDecisions').value;
+    const fighterId = document.getElementById('editFighterStatSelect').value;
+
+    if(!fighterId)
+    {
+        alert('Please select a fighter.');
+        return;
+    }
+
+    const stat = {
+        statsId: parseInt(statsId),
+        wins: parseInt(wins),
+        losses: parseInt(losses),
+        draws: parseInt(draws),
+        kos: parseInt(kos),
+        tkos: parseInt(tkos),
+        submissions: parseInt(submissions),
+        decisions: parseInt(decisions),
+        "mma-fighter": {fighterId: parseInt(fighterId)}
+    };
+
+    fetch(`/api/stats/update/${statsId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(stat)
+    })
+        .then(response =>
+        {
+            if(response.ok)
+            {
+                $('#editStatModal').modal('hide');
+                fetchStats();
+                alert('Stat updated successfully!');
+            }
+            else response.text().then(text => alert('Error updating stat: ' + text));
+        })
+        .catch(error =>
+        {
+            console.error('Error updating stat:', error);
+            alert('Error updating stat.');
+        });
+}
+
+function deleteStat(id){
+    if(!confirm('Are you sure you want to delete this Stat?')) return;
+
+    fetch(`/api/stats/delete/${id}`, {
+        method: 'DELETE'
+    })
+        .then(response =>
+        {
+            if(!response.ok) return response.text().then(text => { throw new Error(text) });
+            alert('Stat deleted successfully!');
+            fetchStats();
+        })
+        .catch(error =>
+        {
+            console.error('Error deleting stat:', error);
+            alert('Error deleting stat: ' + error.message);
+        });
+}
+
+function populateFightersstats(selectId){
+    fetch('/api/mma-fighters/all')
+        .then(response => response.json())
+        .then(data =>
+        {
+            const selectElement = document.getElementById(selectId);
+            selectElement.innerHTML = '<option value="">Select Fighter</option>';
+            data.forEach(fighter =>
+            {
+                const option = document.createElement('option');
+                option.value = fighter.fighterId;
+                option.textContent = `${fighter.first_name} ${fighter.last_name}`;
+                selectElement.appendChild(option);
+            });
+        })
+        .catch(error =>
+        {
+            console.error('Error fetching fighters:', error);
+            alert('Error loading fighters.');
+        });
+}
+
+$(document).ready(function(){
+    populateFightersstats('addFighterStatSelect');
+    populateFightersstats('editFighterStatSelect');
 });

@@ -120,7 +120,7 @@ footer p{
     color: inherit;
 }
 .bttns i{
-    font-size: 20px;
+    font-size: 18px;
     cursor: pointer;
     transition: transform 0.2s ease-in-out;
 }
@@ -130,4 +130,10 @@ footer p{
 }
 .form-group{
     text-align: left;
+}
+#user-icon{
+    font-size: 1.5rem;
+}
+#fighter-image{
+    max-width: 200px;
 }

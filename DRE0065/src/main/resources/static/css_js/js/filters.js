@@ -63,7 +63,9 @@ function applyMMAFighterFilter(){
     }
 }
 
-function checkEnter(event){if(event.key === "Enter") {event.preventDefault(); applyMMAFighterFilter();}}
+function checkEnter(event){
+    if(event.key === "Enter") {event.preventDefault(); applyMMAFighterFilter();}
+}
 
 function applyStatsFilter(){
     const minWins = document.getElementById('min-wins').value;
@@ -77,8 +79,12 @@ function applyStatsFilter(){
 
 function displayStats(filteredStats){
     const tableBody = document.getElementById('stats-table-body');
-    tableBody.innerHTML = '';
+    if(!tableBody) return
+    const storedUser = localStorage.getItem('user');
+    const user = storedUser ? JSON.parse(storedUser) : { role: 'basic' };
+    const userRole = user.role;
 
+    tableBody.innerHTML = '';
     filteredStats.forEach(stats =>
     {
         const row = document.createElement('tr');
@@ -92,15 +98,21 @@ function displayStats(filteredStats){
                 <td>${stats.submissions}</td>
                 <td>${stats.decisions}</td>
                 <td>${stats['mma-fighter']?.first_name} ${stats['mma-fighter']?.last_name || 'N/A'}</td>
-                <td>
-                    <a href="#" onclick="editStat(${stats.statsId})" class="bttns">
-                        <i class="bi bi-pencil-square"></i>
-                    </a>
-                    <a href="#" onclick="deleteStat(${stats.statsId})" class="bttns">
-                        <i class="bi bi-trash"></i>
-                    </a>
-                </td>
             `;
+
+        if(userRole === 'admin')
+        {
+            const actionTd = document.createElement('td');
+            actionTd.innerHTML = `
+              <a href="#" onclick="editStat(${stats.statsId})" class="bttns">
+                 <i class="bi bi-pencil-square"></i>
+              </a>
+              <a href="#" onclick="deleteStat(${stats.statsId})" class="bttns">
+                 <i class="bi bi-trash"></i>
+              </a>
+            `;
+            row.appendChild(actionTd);
+        }
         tableBody.appendChild(row);
     });
 }
