@@ -23,10 +23,10 @@
     <div class="d-flex align-items-center" id="user-section">
         <a class="btn btn-outline-secondary mx-2" th:href="@{/addFight}" th:if="${userRole == 'coach'}">Announcement of a New Fight</a>
         <a class="btn btn-outline-secondary mx-2" th:href="@{/myFights}" th:if="${userRole == 'fighter'}">My Fights</a>
-        <button class="btn btn-outline-primary mx-2" id="login-button" data-toggle="modal" data-target="#loginModal">Login</button>
+        <button class="btn btn-outline-primary mx-2" id="login-button" data-toggle="modal" data-target="#loginModal">LOG IN</button>
         <i class="bi bi-person-circle mx-2" id="user-icon" style="display: none;"></i>
         <span class="font-weight-bold mx-2" id="user-role" style="display: none;">Basic User</span>
-        <button class="btn btn-outline-danger mx-2" id="logout-button" style="display: none;">Logout</button>
+        <button class="btn btn-outline-danger mx-2" id="logout-button" style="display: none;">LOG OUT</button>
     </div>
 </nav>
 
@@ -49,7 +49,7 @@
         <div class="modal-content">
             <form id="login-form">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                    <h5 class="modal-title" id="loginModalLabel">LOG IN</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -67,11 +67,11 @@
                         Invalid credentials. Please try again.
                     </div>
                     <hr>
-                    <p>Or</p>
+                    <p>OR</p>
                     <button type="button" class="btn btn-secondary btn-block" id="skip-login-button">I'm Basic User</button>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button type="submit" class="btn btn-primary">LOG IN</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </form>

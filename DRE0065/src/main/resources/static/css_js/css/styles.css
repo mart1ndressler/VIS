@@ -191,3 +191,10 @@ footer p{
     width: 300px;
     height: 350px;
 }
+.mb-3.text-center{
+    font-weight: bold;
+}
+.fighter-left, .fighter-right{
+    font-weight: bold;
+    font-size: 20px;
+}
