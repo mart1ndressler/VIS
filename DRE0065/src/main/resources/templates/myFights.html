@@ -19,7 +19,6 @@
         <a class="btn btn-outline-secondary mx-2" th:href="@{/}">Main Page</a>
         <a class="btn btn-outline-secondary mx-2" th:href="@{/database}">Database</a>
     </div>
-
     <div class="d-flex align-items-center" id="user-section">
         <a class="btn btn-outline-secondary mx-2" id="myFightsButton" th:href="@{/myFights}" th:if="${userRole == 'fighter'}">My Fights</a>
         <div class="d-flex align-items-center" th:if="${userRole == 'fighter'}">
@@ -28,8 +27,50 @@
         </div>
     </div>
 </nav>
+<div class="main-content">
+    <div class="fighter-section">
+        <img id="fighter-photo" src="/css_js/images/logo.png" alt="Fighter Photo">
+    </div>
+    <div class="tables-row">
+        <div class="table-wrapper mb-4">
+            <h3 class="mb-3 text-center">My Fights History</h3>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-lg" id="fights-table">
+                    <thead>
+                    <tr>
+                        <th>Opponent</th>
+                        <th>Date</th>
+                        <th>Event</th>
+                        <th>Type of Result</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-<footer>
+        <div class="table-wrapper mb-4">
+            <h3 class="mb-3 text-center">Pending Fights</h3>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-lg" id="pending-fights-table">
+                    <thead>
+                    <tr>
+                        <th>Opponent</th>
+                        <th>Date</th>
+                        <th>Event</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="text-center">
     <p>© 2024 MMA Database</p>
     <p>Created by Martin Dressler, DRE0065</p>
 </footer>

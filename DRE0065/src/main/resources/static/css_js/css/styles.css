@@ -137,3 +137,57 @@ footer p{
 #fighter-image{
     max-width: 200px;
 }
+.fighters-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 100px;
+}
+.fighter-select-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 40px;
+}
+.fighter-select-container img{
+    width: 300px;
+    height: auto;
+    margin-top: 50px;
+}
+.fighter-right img{
+    transform: scaleX(-1);
+}
+.vs-text{
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 0 40px;
+}
+#announceFightBtn{
+    font-weight: bold;
+}
+.main-content{
+    flex: 1;
+    padding: 2rem;
+    background-color: #f9f9f9;
+}
+.table-lg th, .table-lg td{
+    font-size: 1.2rem;
+    padding: 1rem;
+}
+.tables-row{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    gap: 2rem;
+}
+.tables-row .table-wrapper{
+    flex: 1;
+}
+.fighter-section{
+    text-align: center;
+    margin-bottom: 2rem;
+}
+#fighter-photo{
+    width: 300px;
+    height: 350px;
+}

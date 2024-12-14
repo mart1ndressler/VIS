@@ -316,18 +316,17 @@ function fetchMMAFighters(){
         .catch(error => console.error('Error fetching MMA fighters:', error));
 }
 
-function viewMMAFighter(fighterId, firstName, lastName, nationality, weightCategoryName) {
+function viewMMAFighter(fighterId, firstName, lastName, nationality, weightCategoryName){
     const imagePath = `css_js/images/${fighterId}.png`;
     const fighterImage = document.getElementById('fighter-image');
     const fighterFullname = document.getElementById('fighter-fullname');
-    const fighterNationality = document.getElementById('fighter-nationality');
-    const fighterWeightCategory = document.getElementById('fighter-weight-category');
+    const fighterInfo = document.getElementById('fighter-info');
+    const fighterStats = document.getElementById('fighter-stats');
 
     fighterImage.src = imagePath;
     fighterImage.alt = `${firstName} ${lastName}`;
     fighterFullname.innerText = `${firstName} ${lastName}`;
-    fighterNationality.innerText = `Nationality: ${nationality}`;
-    fighterWeightCategory.innerText = `Weight Category: ${weightCategoryName}`;
+    fighterInfo.innerText = `${nationality} - ${weightCategoryName}`;
 
     fighterImage.onerror = function()
     {
@@ -335,6 +334,21 @@ function viewMMAFighter(fighterId, firstName, lastName, nationality, weightCateg
         this.src = '/css_js/images/logo.png';
     };
 
+    fighterStats.innerText = '';
+
+    fetch('/api/stats/all')
+        .then(response => response.json())
+        .then(statsArray =>
+        {
+            const fighterStat = statsArray.find(stat => stat["mma-fighter"].first_name.toLowerCase() === firstName.toLowerCase() && stat["mma-fighter"].last_name.toLowerCase() === lastName.toLowerCase());
+            if(fighterStat) fighterStats.innerText = `${fighterStat.wins} - ${fighterStat.losses} - ${fighterStat.draws}`;
+            else fighterStats.innerText = 'No stats available.';
+        })
+        .catch(error =>
+        {
+            console.error('Error fetching stats:', error);
+            fighterStats.innerText = 'Error loading stats.';
+        });
     $('#fighterModal').modal('show');
 }
 
