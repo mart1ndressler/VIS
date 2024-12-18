@@ -22,7 +22,7 @@ public class MMAFight
     @JoinColumn(name = "fighter_id", nullable = false)
     private MMAFighter fighter;
 
-    protected MMAFight() {}
+    public MMAFight() {}
 
     public static MMAFight createMMAFight(Fight fight, MMAFighter fighter)
     {

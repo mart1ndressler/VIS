@@ -11,7 +11,6 @@ import org.dre0065.Event.EntityOperationType;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.*;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.io.*;
 import org.springframework.stereotype.*;
@@ -49,36 +48,43 @@ public class StatsService
 
             for(Stats statsFromJsonItem : statsListFromJson)
             {
-                MMAFighter fighter = mmaFighterRepository.findByFirstNameAndLastName(statsFromJsonItem.getFighter().getFirstName(), statsFromJsonItem.getFighter().getLastName()).orElse(null);
-
-                if(fighter != null)
+                if(statsFromJsonItem.getFighter() == null || statsFromJsonItem.getFighter().getFirstName() == null || statsFromJsonItem.getFighter().getLastName() == null)
                 {
-                    statsFromJsonItem.setFighter(fighter);
-                    Stats existingStats = statsRepository.findByFighter(fighter).orElse(null);
-
-                    if(existingStats != null)
-                    {
-                        existingStats.setWins(statsFromJsonItem.getWins());
-                        existingStats.setLosses(statsFromJsonItem.getLosses());
-                        existingStats.setDraws(statsFromJsonItem.getDraws());
-                        existingStats.setKos(statsFromJsonItem.getKos());
-                        existingStats.setTkos(statsFromJsonItem.getTkos());
-                        existingStats.setSubmissions(statsFromJsonItem.getSubmissions());
-                        existingStats.setDecisions(statsFromJsonItem.getDecisions());
-                        statsRepository.save(existingStats);
-
-                        eventPublisher.publishEvent(new EntityAddedEvent(this, existingStats, EntityOperationType.UPDATE));
-                        logger.info("Updated Stats for Fighter ID: {}", existingStats.getStatsId());
-                    }
-                    else
-                    {
-                        Stats statsToSave = Stats.createStats(statsFromJsonItem.getWins(), statsFromJsonItem.getLosses(), statsFromJsonItem.getDraws(), statsFromJsonItem.getKos(), statsFromJsonItem.getTkos(), statsFromJsonItem.getSubmissions(), statsFromJsonItem.getDecisions(), fighter);
-                        statsRepository.save(statsToSave);
-                        eventPublisher.publishEvent(new EntityAddedEvent(this, statsToSave, EntityOperationType.CREATE));
-                        logger.info("Created Stats for Fighter ID: {}", statsToSave.getStatsId());
-                    }
+                    logger.error("Stats record is missing fighter information. Skipping.");
+                    continue;
                 }
-                else logger.error("Fighter not found for stats: {} {}", statsFromJsonItem.getFighter().getFirstName(), statsFromJsonItem.getFighter().getLastName());
+
+                MMAFighter fighter = mmaFighterRepository.findByFirstNameAndLastName(statsFromJsonItem.getFighter().getFirstName(), statsFromJsonItem.getFighter().getLastName()).orElse(null);
+                if(fighter == null)
+                {
+                    logger.error("Fighter not found for stats: {} {}", statsFromJsonItem.getFighter().getFirstName(), statsFromJsonItem.getFighter().getLastName());
+                    continue;
+                }
+
+                Stats existingStats = statsRepository.findByFighter(fighter).orElse(null);
+                if(existingStats != null)
+                {
+                    existingStats.setWins(statsFromJsonItem.getWins());
+                    existingStats.setLosses(statsFromJsonItem.getLosses());
+                    existingStats.setDraws(statsFromJsonItem.getDraws());
+                    existingStats.setKos(statsFromJsonItem.getKos());
+                    existingStats.setTkos(statsFromJsonItem.getTkos());
+                    existingStats.setSubmissions(statsFromJsonItem.getSubmissions());
+                    existingStats.setDecisions(statsFromJsonItem.getDecisions());
+                    existingStats.setFighter(fighter);
+
+                    statsRepository.save(existingStats);
+                    eventPublisher.publishEvent(new EntityAddedEvent(this, existingStats, EntityOperationType.UPDATE));
+                    logger.info("Updated Stats for Fighter ID: {}", existingStats.getStatsId());
+                }
+                else
+                {
+                    Stats statsToSave = Stats.createStats(statsFromJsonItem.getWins(), statsFromJsonItem.getLosses(), statsFromJsonItem.getDraws(), statsFromJsonItem.getKos(), statsFromJsonItem.getTkos(), statsFromJsonItem.getSubmissions(), statsFromJsonItem.getDecisions(), fighter);
+                    statsToSave.setFighter(fighter);
+                    statsRepository.save(statsToSave);
+                    eventPublisher.publishEvent(new EntityAddedEvent(this, statsToSave, EntityOperationType.CREATE));
+                    logger.info("Created Stats for Fighter ID: {}", statsToSave.getStatsId());
+                }
             }
         }
         catch(IOException e) {logger.error("Error loading stats from JSON: {}", e.getMessage());}
@@ -194,7 +200,6 @@ public class StatsService
                 logger.error("Fighter with ID {} already has stats.", fighter.getFighterId());
                 continue;
             }
-
             Stats statBuilt = Stats.createStats(stat.getWins(), stat.getLosses(), stat.getDraws(), stat.getKos(), stat.getTkos(), stat.getSubmissions(), stat.getDecisions(), fighter);
             statsToSave.add(statBuilt);
         }

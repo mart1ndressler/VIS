@@ -3,7 +3,7 @@ package org.dre0065.Service;
 import com.fasterxml.jackson.core.type.*;
 import com.fasterxml.jackson.databind.*;
 import org.dre0065.Model.WeightCategory;
-import org.dre0065.Repository.WeightCategoryRepository;
+import org.dre0065.Repository.*;
 import org.dre0065.Event.EntityAddedEvent;
 import org.dre0065.Event.EntityOperationType;
 import org.springframework.beans.factory.annotation.*;
@@ -22,6 +22,21 @@ public class WeightCategoryService
 {
     @Autowired
     private WeightCategoryRepository weightCategoryRepository;
+
+    @Autowired
+    private FightRepository fightRepository;
+
+    @Autowired
+    private MMAFighterRepository mmaFighterRepository;
+
+    @Autowired
+    private StatsRepository statsRepository;
+
+    @Autowired
+    private PreparationRepository preparationRepository;
+
+    @Autowired
+    private MMAFightRepository mmaFightRepository;
 
     @Autowired
     private ApplicationEventPublisher eventPublisher;
@@ -47,11 +62,7 @@ public class WeightCategoryService
                 boolean exists = weightCategoryRepository.existsByName(categoryFromJson.getName());
                 if(!exists)
                 {
-                    WeightCategory categoryToSave = WeightCategory.createWeightCategory(
-                            categoryFromJson.getName(),
-                            categoryFromJson.getMinWeight(),
-                            categoryFromJson.getMaxWeight()
-                    );
+                    WeightCategory categoryToSave = WeightCategory.createWeightCategory(categoryFromJson.getName(), categoryFromJson.getMinWeight(), categoryFromJson.getMaxWeight());
                     weightCategoryRepository.save(categoryToSave);
                     eventPublisher.publishEvent(new EntityAddedEvent(this, categoryToSave, EntityOperationType.CREATE));
                 }
@@ -106,6 +117,12 @@ public class WeightCategoryService
         if(categoryOpt.isPresent())
         {
             WeightCategory category = categoryOpt.get();
+            preparationRepository.deleteByWeightCategoryId(id);
+            mmaFightRepository.deleteByWeightCategoryId(id);
+            statsRepository.deleteByWeightCategoryId(id);
+            fightRepository.deleteByWeightCategoryId(id);
+            mmaFighterRepository.deleteByWeightCategoryId(id);
+
             weightCategoryRepository.deleteById(id);
             eventPublisher.publishEvent(new EntityAddedEvent(this, category, EntityOperationType.DELETE));
         }

@@ -8,10 +8,10 @@ import org.dre0065.Model.Event;
 import org.dre0065.Repository.FightRepository;
 import org.dre0065.Event.EntityAddedEvent;
 import org.dre0065.Event.EntityOperationType;
+import org.dre0065.Repository.MMAFightRepository;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.io.*;
 import org.springframework.stereotype.*;
@@ -33,6 +33,9 @@ public class FightService
 
     @Autowired
     private EventService eventService;
+
+    @Autowired
+    private MMAFightRepository mmaFightRepository;
 
     @Autowired
     private ApplicationEventPublisher eventPublisher;
@@ -130,6 +133,7 @@ public class FightService
         if(fightOpt.isPresent())
         {
             Fight fight = fightOpt.get();
+            mmaFightRepository.deleteByFightId(fightId);
             fightRepository.delete(fight);
             eventPublisher.publishEvent(new EntityAddedEvent(this, fight, EntityOperationType.DELETE));
             logger.info("Deleted Fight with ID: " + fightId);

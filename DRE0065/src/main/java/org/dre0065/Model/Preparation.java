@@ -46,7 +46,7 @@ public class Preparation
     @JoinColumn(name = "coach_id", nullable = false)
     private Coach coach;
 
-    protected Preparation() {}
+    public Preparation() {}
 
     public static Preparation createPreparation(Date startOfPreparation, Date endOfPreparation, String mmaClub, String clubRegion, MMAFighter fighter, Coach coach)
     {

@@ -33,7 +33,7 @@ public class WeightCategory
     @OneToMany(mappedBy = "weightCategory", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Fight> fights = new HashSet<>();
 
-    protected WeightCategory() {}
+    public WeightCategory() {}
 
     public static WeightCategory createWeightCategory(String name, String minWeight, String maxWeight)
     {

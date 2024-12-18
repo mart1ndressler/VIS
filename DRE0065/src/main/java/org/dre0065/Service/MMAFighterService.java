@@ -4,13 +4,15 @@ import com.fasterxml.jackson.core.type.*;
 import com.fasterxml.jackson.databind.*;
 import org.dre0065.Model.MMAFighter;
 import org.dre0065.Model.WeightCategory;
+import org.dre0065.Repository.MMAFightRepository;
 import org.dre0065.Repository.MMAFighterRepository;
 import org.dre0065.Event.EntityAddedEvent;
 import org.dre0065.Event.EntityOperationType;
+import org.dre0065.Repository.PreparationRepository;
+import org.dre0065.Repository.StatsRepository;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.*;
-import org.springframework.context.annotation.*;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.io.*;
 import org.springframework.stereotype.*;
@@ -32,6 +34,15 @@ public class MMAFighterService
 
     @Autowired
     private ApplicationEventPublisher eventPublisher;
+
+    @Autowired
+    private StatsRepository statsRepository;
+
+    @Autowired
+    private PreparationRepository preparationRepository;
+
+    @Autowired
+    private MMAFightRepository mmaFightRepository;
 
     @EventListener(ApplicationReadyEvent.class)
     @Transactional
@@ -168,6 +179,9 @@ public class MMAFighterService
         if(fighterOpt.isPresent())
         {
             MMAFighter fighter = fighterOpt.get();
+            statsRepository.deleteByFighterId(fighterId);
+            preparationRepository.deleteByFighterId(fighterId);
+            mmaFightRepository.deleteByFighterId(fighterId);
             mmaFighterRepository.delete(fighter);
             eventPublisher.publishEvent(new EntityAddedEvent(this, fighter, EntityOperationType.DELETE));
             logger.info("Deleted MMAFighter with ID: {}", fighterId);

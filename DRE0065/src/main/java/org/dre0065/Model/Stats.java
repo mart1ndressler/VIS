@@ -41,7 +41,7 @@ public class Stats
     @JsonProperty("mma-fighter")
     private MMAFighter fighter;
 
-    protected Stats() {}
+    public Stats() {}
 
     public static Stats createStats(int wins, int losses, int draws, int kos, int tkos, int submissions, int decisions, MMAFighter fighter)
     {

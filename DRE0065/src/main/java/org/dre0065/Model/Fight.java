@@ -41,7 +41,7 @@ public class Fight
     @OneToMany(mappedBy = "fight", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MMAFight> mmaFights = new HashSet<>();
 
-    protected Fight() {}
+    public Fight() {}
 
     public static Fight createFight(Date date, String result, String typeOfResult, WeightCategory weightCategory, Event event)
     {

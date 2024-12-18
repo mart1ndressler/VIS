@@ -63,7 +63,7 @@ public class MMAFighter
     @OneToMany(mappedBy = "fighter", cascade = CascadeType.ALL)
     private Set<MMAFight> fightsParticipated = new HashSet<>();
 
-    protected MMAFighter() {}
+    public MMAFighter() {}
 
     public static MMAFighter createMMAFighter(String firstName, String lastName, String weight, String height, String reach, String nationality, String ranking, int fights, int points, WeightCategory weightCategory)
     {

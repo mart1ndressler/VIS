@@ -1,61 +1,84 @@
 package org.dre0065.Repository;
 
 import org.dre0065.Model.WeightCategory;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.jdbc.core.*;
 import org.springframework.stereotype.*;
-import jakarta.persistence.*;
+import java.sql.*;
 import java.util.*;
 
 @Repository
 public class WeightCategoryRepository
 {
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    private RowMapper<WeightCategory> categoryRowMapper = new RowMapper<WeightCategory>()
+    {
+        @Override
+        public WeightCategory mapRow(ResultSet rs, int rowNum) throws SQLException
+        {
+            WeightCategory w = new WeightCategory();
+            w.setWeightCategoryId(rs.getInt("weight_category_id"));
+            w.setName(rs.getString("name"));
+            w.setMinWeight(rs.getString("min_weight"));
+            w.setMaxWeight(rs.getString("max_weight"));
+            return w;
+        }
+    };
 
     public boolean existsByName(String name)
     {
-        String jpql = "SELECT COUNT(w) FROM WeightCategory w WHERE w.name = :name";
-        Long count = entityManager.createQuery(jpql, Long.class).setParameter("name", name).getSingleResult();
-        return count > 0;
+        String sql = "SELECT COUNT(*) FROM weight_category WHERE name = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, name);
+        return count != null && count > 0;
     }
 
     public Optional<WeightCategory> findByName(String name)
     {
-        String jpql = "SELECT w FROM WeightCategory w WHERE w.name = :name";
-        List<WeightCategory> results = entityManager.createQuery(jpql, WeightCategory.class).setParameter("name", name).getResultList();
-        if(results.isEmpty()) return Optional.empty();
+        String sql = "SELECT * FROM weight_category WHERE name = ?";
+        List<WeightCategory> results = jdbcTemplate.query(sql, categoryRowMapper, name);
+        if (results.isEmpty()) return Optional.empty();
         return Optional.of(results.get(0));
     }
 
     public Optional<WeightCategory> findById(Integer id)
     {
-        WeightCategory category = entityManager.find(WeightCategory.class, id);
-        return category != null ? Optional.of(category) : Optional.empty();
+        String sql = "SELECT * FROM weight_category WHERE weight_category_id = ?";
+        List<WeightCategory> results = jdbcTemplate.query(sql, categoryRowMapper, id);
+        if(results.isEmpty()) return Optional.empty();
+        return Optional.of(results.get(0));
     }
 
     public List<WeightCategory> findAll()
     {
-        String jpql = "SELECT w FROM WeightCategory w";
-        return entityManager.createQuery(jpql, WeightCategory.class).getResultList();
+        String sql = "SELECT * FROM weight_category";
+        return jdbcTemplate.query(sql, categoryRowMapper);
     }
 
     public WeightCategory save(WeightCategory category)
     {
         if(category.getWeightCategoryId() == null)
         {
-            entityManager.persist(category);
+            String sql = "INSERT INTO weight_category (name, min_weight, max_weight) VALUES (?, ?, ?)";
+            jdbcTemplate.update(sql, category.getName(), category.getMinWeight(), category.getMaxWeight());
+            Integer newId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
+            if(newId != null) category.setWeightCategoryId(newId);
             return category;
         }
-        else return entityManager.merge(category);
+        else
+        {
+            String sql = "UPDATE weight_category SET name=?, min_weight=?, max_weight=? WHERE weight_category_id=?";
+            jdbcTemplate.update(sql, category.getName(), category.getMinWeight(), category.getMaxWeight(), category.getWeightCategoryId());
+            return category;
+        }
     }
 
-    public void saveAll(List<WeightCategory> categories)
-    {
-        for(WeightCategory category : categories) save(category);
-    }
+    public void saveAll(List<WeightCategory> categories) {for(WeightCategory category : categories) save(category);}
 
     public void deleteById(Integer id)
     {
-        WeightCategory category = entityManager.find(WeightCategory.class, id);
-        if(category != null) entityManager.remove(category);
+        String sql = "DELETE FROM weight_category WHERE weight_category_id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

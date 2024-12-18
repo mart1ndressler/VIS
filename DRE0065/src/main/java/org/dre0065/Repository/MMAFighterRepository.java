@@ -1,67 +1,107 @@
 package org.dre0065.Repository;
 
 import org.dre0065.Model.MMAFighter;
+import org.dre0065.Model.WeightCategory;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.jdbc.core.*;
 import org.springframework.stereotype.*;
-import jakarta.persistence.*;
 import java.util.*;
 
 @Repository
 public class MMAFighterRepository
 {
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    private RowMapper<MMAFighter> fighterRowMapper = (rs, rowNum) ->
+    {
+        MMAFighter f = new MMAFighter();
+        f.setFighterId(rs.getInt("fighter_id"));
+        f.setFirstName(rs.getString("first_name"));
+        f.setLastName(rs.getString("last_name"));
+        f.setWeight(rs.getString("weight"));
+        f.setHeight(rs.getString("height"));
+        f.setReach(rs.getString("reach"));
+        f.setNationality(rs.getString("nationality"));
+        f.setRanking(rs.getString("ranking"));
+        f.setFights(rs.getInt("fights"));
+        f.setPoints(rs.getInt("points"));
+
+        WeightCategory wc = new WeightCategory();
+        wc.setWeightCategoryId(rs.getInt("wc_id"));
+        wc.setName(rs.getString("wc_name"));
+        wc.setMinWeight(rs.getString("wc_min_weight"));
+        wc.setMaxWeight(rs.getString("wc_max_weight"));
+
+        f.setWeightCategory(wc);
+        return f;
+    };
 
     public boolean existsByFirstNameAndLastName(String firstName, String lastName)
     {
-        String jpql = "SELECT COUNT(m) FROM MMAFighter m WHERE m.firstName = :firstName AND m.lastName = :lastName";
-        Long count = entityManager.createQuery(jpql, Long.class).setParameter("firstName", firstName).setParameter("lastName", lastName).getSingleResult();
-        return count > 0;
+        String sql = "SELECT COUNT(*) FROM mma_fighter WHERE first_name=? AND last_name=?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, firstName, lastName);
+        return count != null && count > 0;
     }
 
     public Optional<MMAFighter> findByFirstNameAndLastName(String firstName, String lastName)
     {
-        String jpql = "SELECT m FROM MMAFighter m WHERE m.firstName = :firstName AND m.lastName = :lastName";
-        List<MMAFighter> results = entityManager.createQuery(jpql, MMAFighter.class).setParameter("firstName", firstName).setParameter("lastName", lastName).getResultList();
+        String sql = "SELECT f.fighter_id, f.first_name, f.last_name, f.weight, f.height, f.reach, f.nationality, f.ranking, f.fights, f.points, w.weight_category_id AS wc_id, w.name AS wc_name, w.min_weight AS wc_min_weight, w.max_weight AS wc_max_weight " +
+                "FROM mma_fighter f JOIN weight_category w ON f.weight_category_id = w.weight_category_id " +
+                "WHERE f.first_name=? AND f.last_name=?";
+        List<MMAFighter> results = jdbcTemplate.query(sql, fighterRowMapper, firstName, lastName);
         if(results.isEmpty()) return Optional.empty();
         return Optional.of(results.get(0));
     }
 
     public Optional<MMAFighter> findById(Integer id)
     {
-        MMAFighter fighter = entityManager.find(MMAFighter.class, id);
-        return fighter != null ? Optional.of(fighter) : Optional.empty();
+        String sql = "SELECT f.fighter_id, f.first_name, f.last_name, f.weight, f.height, f.reach, f.nationality, f.ranking, f.fights, f.points, w.weight_category_id AS wc_id, w.name AS wc_name, w.min_weight AS wc_min_weight, w.max_weight AS wc_max_weight " +
+                "FROM mma_fighter f JOIN weight_category w ON f.weight_category_id = w.weight_category_id " +
+                "WHERE f.fighter_id=?";
+        List<MMAFighter> results = jdbcTemplate.query(sql, fighterRowMapper, id);
+        if(results.isEmpty()) return Optional.empty();
+        return Optional.of(results.get(0));
     }
 
     public List<MMAFighter> findAll()
     {
-        String jpql = "SELECT m FROM MMAFighter m";
-        return entityManager.createQuery(jpql, MMAFighter.class).getResultList();
+        String sql = "SELECT f.fighter_id, f.first_name, f.last_name, f.weight, f.height, f.reach, f.nationality, f.ranking, f.fights, f.points, w.weight_category_id AS wc_id, w.name AS wc_name, w.min_weight AS wc_min_weight, w.max_weight AS wc_max_weight " +
+                "FROM mma_fighter f JOIN weight_category w ON f.weight_category_id = w.weight_category_id";
+        return jdbcTemplate.query(sql, fighterRowMapper);
     }
 
     public MMAFighter save(MMAFighter fighter)
     {
         if(fighter.getFighterId() == 0)
         {
-            entityManager.persist(fighter);
+            String sql = "INSERT INTO mma_fighter (first_name, last_name, weight, height, reach, nationality, ranking, fights, points, weight_category_id) VALUES (?,?,?,?,?,?,?,?,?,?)";
+            jdbcTemplate.update(sql, fighter.getFirstName(), fighter.getLastName(), fighter.getWeight(), fighter.getHeight(), fighter.getReach(), fighter.getNationality(), fighter.getRanking(), fighter.getFights(), fighter.getPoints(), fighter.getWeightCategory().getWeightCategoryId());
+            Integer newId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
+            if(newId != null) fighter.setFighterId(newId);
             return fighter;
         }
-        else return entityManager.merge(fighter);
+        else
+        {
+            String sql = "UPDATE mma_fighter SET first_name=?, last_name=?, weight=?, height=?, reach=?, nationality=?, ranking=?, fights=?, points=?, weight_category_id=? WHERE fighter_id=?";
+            jdbcTemplate.update(sql, fighter.getFirstName(), fighter.getLastName(), fighter.getWeight(), fighter.getHeight(), fighter.getReach(), fighter.getNationality(), fighter.getRanking(), fighter.getFights(), fighter.getPoints(), fighter.getWeightCategory().getWeightCategoryId(), fighter.getFighterId());
+            return fighter;
+        }
     }
 
-    public void saveAll(List<MMAFighter> fighters) {for(MMAFighter fighter : fighters) save(fighter);}
+    public void saveAll(List<MMAFighter> fighters) {for(MMAFighter f : fighters) save(f);}
 
     public void deleteById(Integer id)
     {
-        MMAFighter fighter = entityManager.find(MMAFighter.class, id);
-        if(fighter != null) entityManager.remove(fighter);
+        String sql = "DELETE FROM mma_fighter WHERE fighter_id=?";
+        jdbcTemplate.update(sql, id);
     }
 
-    public void delete(MMAFighter fighter)
+    public void delete(MMAFighter fighter) {deleteById(fighter.getFighterId());}
+
+    public void deleteByWeightCategoryId(int weightCategoryId)
     {
-        if(fighter != null)
-        {
-            if(!entityManager.contains(fighter)) fighter = entityManager.merge(fighter);
-            entityManager.remove(fighter);
-        }
+        String sql = "DELETE FROM mma_fighter WHERE weight_category_id = ?";
+        jdbcTemplate.update(sql, weightCategoryId);
     }
 }
