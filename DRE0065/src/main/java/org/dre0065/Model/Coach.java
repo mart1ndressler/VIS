@@ -25,7 +25,7 @@ public class Coach
     @Column(name = "specialization", nullable = false, length = 20)
     private String specialization;
 
-    protected Coach() {}
+    public Coach() {}
 
     public static Coach createCoach(String firstName, String lastName, String specialization)
     {

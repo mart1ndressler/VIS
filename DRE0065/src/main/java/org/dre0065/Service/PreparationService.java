@@ -2,7 +2,6 @@ package org.dre0065.Service;
 
 import com.fasterxml.jackson.core.type.*;
 import com.fasterxml.jackson.databind.*;
-import jakarta.annotation.*;
 import org.dre0065.Model.Preparation;
 import org.dre0065.Model.Coach;
 import org.dre0065.Model.MMAFighter;
@@ -12,9 +11,14 @@ import org.dre0065.Event.EntityOperationType;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.*;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.io.*;
+import org.springframework.http.*;
 import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.*;
+import org.springframework.boot.context.event.*;
+import org.springframework.web.server.*;
 import java.io.*;
 import java.util.*;
 
@@ -35,9 +39,11 @@ public class PreparationService
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
+    @Transactional
     public void init() {loadPreparationsFromJson();}
 
+    @Transactional
     public void loadPreparationsFromJson()
     {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -81,6 +87,7 @@ public class PreparationService
     public void createPreparation(Preparation preparation)
     {
         preparation.setPreparationId(0);
+
         if(preparation.getFighter() == null || preparation.getFighter().getFighterId() == 0)
         {
             logger.error("Invalid Fighter information for Preparation.");
@@ -109,8 +116,29 @@ public class PreparationService
             existingPreparation.setEndOfPreparation(updatedPreparation.getEndOfPreparation());
             existingPreparation.setMmaClub(updatedPreparation.getMmaClub());
             existingPreparation.setClubRegion(updatedPreparation.getClubRegion());
-            existingPreparation.setFighter(updatedPreparation.getFighter());
-            existingPreparation.setCoach(updatedPreparation.getCoach());
+
+            if(updatedPreparation.getFighter() != null)
+            {
+                MMAFighter fighter = mmaFighterService.getFighterById(updatedPreparation.getFighter().getFighterId());
+                if(fighter != null) existingPreparation.setFighter(fighter);
+                else
+                {
+                    logger.error("MMA Fighter not found with ID: {}", updatedPreparation.getFighter().getFighterId());
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "MMA Fighter not found with ID: " + updatedPreparation.getFighter().getFighterId());
+                }
+            }
+
+            if(updatedPreparation.getCoach() != null)
+            {
+                Coach coach = coachService.getCoachById(updatedPreparation.getCoach().getCoachId());
+                if(coach != null) existingPreparation.setCoach(coach);
+                else
+                {
+                    logger.error("Coach not found with ID: {}", updatedPreparation.getCoach().getCoachId());
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Coach not found with ID: " + updatedPreparation.getCoach().getCoachId());
+                }
+            }
+
             preparationRepository.save(existingPreparation);
             eventPublisher.publishEvent(new EntityAddedEvent(this, existingPreparation, EntityOperationType.UPDATE));
             logger.info("Updated Preparation with ID: {}", existingPreparation.getPreparationId());
@@ -140,6 +168,7 @@ public class PreparationService
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Preparation> getAllPreparations() {return preparationRepository.findAll();}
 
     @Transactional
@@ -162,6 +191,7 @@ public class PreparationService
         }
     }
 
+    @Transactional(readOnly = true)
     public Preparation getPreparationById(int id)
     {
         Optional<Preparation> optionalPreparation = preparationRepository.findById(id);

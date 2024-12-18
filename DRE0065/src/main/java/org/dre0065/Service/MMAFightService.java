@@ -2,23 +2,29 @@ package org.dre0065.Service;
 
 import com.fasterxml.jackson.core.type.*;
 import com.fasterxml.jackson.databind.*;
-import jakarta.annotation.*;
 import org.dre0065.Model.MMAFight;
 import org.dre0065.Model.Fight;
 import org.dre0065.Model.MMAFighter;
 import org.dre0065.Repository.MMAFightRepository;
 import org.dre0065.Event.EntityAddedEvent;
 import org.dre0065.Event.EntityOperationType;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.*;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.io.*;
 import org.springframework.stereotype.*;
+import org.springframework.transaction.annotation.*;
+import org.springframework.boot.context.event.*;
 import java.io.*;
 import java.util.*;
 
 @Service
 public class MMAFightService
 {
+    private static final Logger logger = LoggerFactory.getLogger(MMAFightService.class);
+
     @Autowired
     private MMAFightRepository mmaFightRepository;
 
@@ -31,9 +37,11 @@ public class MMAFightService
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
+    @Transactional
     public void init() {loadMMAFightsFromJson();}
 
+    @Transactional
     public void loadMMAFightsFromJson()
     {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -49,22 +57,29 @@ public class MMAFightService
 
                 if(fight != null && fighter != null)
                 {
-                    MMAFight existingMMAFight = mmaFightRepository.findByFightAndFighter(fight, fighter).orElse(null);
-                    if(existingMMAFight == null)
+                    Optional<MMAFight> existingMMAFightOpt = mmaFightRepository.findByFightAndFighter(fight, fighter);
+                    if(existingMMAFightOpt.isPresent())
+                    {
+                        MMAFight existingMMAFight = existingMMAFightOpt.get();
+                        mmaFightRepository.save(existingMMAFight);
+                        eventPublisher.publishEvent(new EntityAddedEvent(this, existingMMAFight, EntityOperationType.UPDATE));
+                        logger.info("Updated MMAFight with ID: {}", existingMMAFight.getMmaFightId());
+                    }
+                    else
                     {
                         MMAFight mmaFightToSave = MMAFight.createMMAFight(fight, fighter);
                         mmaFightRepository.save(mmaFightToSave);
                         eventPublisher.publishEvent(new EntityAddedEvent(this, mmaFightToSave, EntityOperationType.CREATE));
+                        logger.info("Created MMAFight with ID: {}", mmaFightToSave.getMmaFightId());
                     }
                 }
-                else System.err.println("Fight or Fighter not found for MMAFight with ID: " + mmaFightFromJson.getMmaFightId());
+                else logger.error("Fight or Fighter not found for MMAFight with ID: {}", mmaFightFromJson.getMmaFightId());
             }
         }
-        catch(IOException e) {System.err.println("Error loading MMAFights from JSON: " + e.getMessage());}
+        catch(IOException e) {logger.error("Error loading MMAFights from JSON: {}", e.getMessage());}
     }
 
-    public List<MMAFight> getAllMMAFights() {return mmaFightRepository.findAll();}
-
+    @Transactional
     public void saveAllMMAFights(List<MMAFight> mmaFights)
     {
         List<MMAFight> mmaFightsToSave = new ArrayList<>();
@@ -76,28 +91,44 @@ public class MMAFightService
             mmaFightsToSave.add(mmaFightBuilt);
         }
         mmaFightRepository.saveAll(mmaFightsToSave);
-        for(MMAFight savedMMAFight : mmaFightsToSave) eventPublisher.publishEvent(new EntityAddedEvent(this, savedMMAFight, EntityOperationType.CREATE));
+        for(MMAFight savedMMAFight : mmaFightsToSave)
+        {
+            eventPublisher.publishEvent(new EntityAddedEvent(this, savedMMAFight, EntityOperationType.CREATE));
+            logger.info("Created MMAFight with ID: {}", savedMMAFight.getMmaFightId());
+        }
     }
 
-    public MMAFight getMMAFightById(int mmaFightId) {return mmaFightRepository.findById(mmaFightId).orElse(null);}
+    @Transactional(readOnly = true)
+    public List<MMAFight> getAllMMAFights() {return mmaFightRepository.findAll();}
 
+    @Transactional
     public void saveMMAFight(MMAFight mmaFight)
     {
         boolean isCreate = mmaFight.getMmaFightId() == 0;
         mmaFightRepository.save(mmaFight);
         EntityOperationType operationType = isCreate ? EntityOperationType.CREATE : EntityOperationType.UPDATE;
         eventPublisher.publishEvent(new EntityAddedEvent(this, mmaFight, operationType));
+        logger.info((isCreate ? "Created" : "Updated") + " MMAFight with ID: {}", mmaFight.getMmaFightId());
     }
 
+    @Transactional
     public void deleteMMAFightById(int mmaFightId)
     {
         Optional<MMAFight> mmaFightOpt = mmaFightRepository.findById(mmaFightId);
         if(mmaFightOpt.isPresent())
         {
             MMAFight mmaFight = mmaFightOpt.get();
-            mmaFightRepository.deleteById(mmaFightId);
+            mmaFightRepository.delete(mmaFight);
             eventPublisher.publishEvent(new EntityAddedEvent(this, mmaFight, EntityOperationType.DELETE));
+            logger.info("Deleted MMAFight with ID: {}", mmaFightId);
         }
-        else throw new RuntimeException("MMAFight with ID " + mmaFightId + " not found!");
+        else
+        {
+            logger.error("MMAFight with ID {} not found for deletion.", mmaFightId);
+            throw new RuntimeException("MMAFight with ID " + mmaFightId + " not found!");
+        }
     }
+
+    @Transactional(readOnly = true)
+    public MMAFight getMMAFightById(int mmaFightId) {return mmaFightRepository.findById(mmaFightId).orElse(null);}
 }

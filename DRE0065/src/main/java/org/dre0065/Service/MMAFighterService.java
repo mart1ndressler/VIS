@@ -2,7 +2,6 @@ package org.dre0065.Service;
 
 import com.fasterxml.jackson.core.type.*;
 import com.fasterxml.jackson.databind.*;
-import jakarta.annotation.*;
 import org.dre0065.Model.MMAFighter;
 import org.dre0065.Model.WeightCategory;
 import org.dre0065.Repository.MMAFighterRepository;
@@ -11,9 +10,12 @@ import org.dre0065.Event.EntityOperationType;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.*;
+import org.springframework.context.annotation.*;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.io.*;
 import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.*;
+import org.springframework.boot.context.event.*;
 import java.io.*;
 import java.util.*;
 
@@ -31,9 +33,11 @@ public class MMAFighterService
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
+    @Transactional
     public void init() {loadUniqueFightersFromJson();}
 
+    @Transactional
     public void loadUniqueFightersFromJson()
     {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -45,7 +49,6 @@ public class MMAFighterService
             for(MMAFighter fighterFromJson : fightersFromJson)
             {
                 boolean exists = mmaFighterRepository.existsByFirstNameAndLastName(fighterFromJson.getFirstName(), fighterFromJson.getLastName());
-
                 if(!exists)
                 {
                     String categoryName = fighterFromJson.getWeightCategory().getName();
@@ -119,6 +122,7 @@ public class MMAFighterService
         }
     }
 
+    @Transactional
     public void saveAllFighters(List<MMAFighter> fighters)
     {
         List<MMAFighter> fightersToSave = new ArrayList<>();
@@ -143,17 +147,21 @@ public class MMAFighterService
         }
     }
 
+    @Transactional(readOnly = true)
     public List<MMAFighter> getAllFighters() {return mmaFighterRepository.findAll();}
+
+    @Transactional(readOnly = true)
     public MMAFighter getFighterByName(String firstName, String lastName) {return mmaFighterRepository.findByFirstNameAndLastName(firstName, lastName).orElse(null);}
 
     public Set<String> getUniqueNationalities()
     {
         List<MMAFighter> fighters = mmaFighterRepository.findAll();
         Set<String> nationalities = new HashSet<>();
-        for(MMAFighter fighter : fighters) if(fighter.getNationality() != null) nationalities.add(fighter.getNationality());
+        for(MMAFighter fighter : fighters) {if(fighter.getNationality() != null) nationalities.add(fighter.getNationality());}
         return nationalities;
     }
 
+    @Transactional
     public void deleteFighterById(int fighterId)
     {
         Optional<MMAFighter> fighterOpt = mmaFighterRepository.findById(fighterId);
@@ -171,5 +179,6 @@ public class MMAFighterService
         }
     }
 
+    @Transactional(readOnly = true)
     public MMAFighter getFighterById(int id) {return mmaFighterRepository.findById(id).orElse(null);}
 }

@@ -2,7 +2,6 @@ package org.dre0065.Service;
 
 import com.fasterxml.jackson.core.type.*;
 import com.fasterxml.jackson.databind.*;
-import jakarta.annotation.*;
 import org.dre0065.Model.Stats;
 import org.dre0065.Model.MMAFighter;
 import org.dre0065.Repository.StatsRepository;
@@ -12,9 +11,12 @@ import org.dre0065.Event.EntityOperationType;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.*;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.io.*;
 import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.*;
+import org.springframework.boot.context.event.*;
 import java.io.*;
 import java.util.*;
 
@@ -32,9 +34,11 @@ public class StatsService
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
+    @Transactional
     public void init() {loadStatsFromJson();}
 
+    @Transactional
     public void loadStatsFromJson()
     {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -43,7 +47,7 @@ public class StatsService
             ClassPathResource resource = new ClassPathResource("stats.json");
             List<Stats> statsListFromJson = objectMapper.readValue(resource.getFile(), new TypeReference<List<Stats>>() {});
 
-            for (Stats statsFromJsonItem : statsListFromJson)
+            for(Stats statsFromJsonItem : statsListFromJson)
             {
                 MMAFighter fighter = mmaFighterRepository.findByFirstNameAndLastName(statsFromJsonItem.getFighter().getFirstName(), statsFromJsonItem.getFighter().getLastName()).orElse(null);
 
@@ -174,6 +178,7 @@ public class StatsService
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Stats> getAllStats() {return statsRepository.findAll();}
 
     @Transactional
@@ -208,6 +213,7 @@ public class StatsService
         else updateStatById(stat.getStatsId(), stat);
     }
 
+    @Transactional
     public Stats getStatsById(int id)
     {
         Optional<Stats> optionalStat = statsRepository.findById(id);

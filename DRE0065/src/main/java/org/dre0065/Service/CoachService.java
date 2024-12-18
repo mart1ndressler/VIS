@@ -2,8 +2,6 @@ package org.dre0065.Service;
 
 import com.fasterxml.jackson.core.type.*;
 import com.fasterxml.jackson.databind.*;
-import jakarta.annotation.*;
-import jakarta.transaction.*;
 import org.dre0065.Model.Coach;
 import org.dre0065.Repository.CoachRepository;
 import org.dre0065.Repository.PreparationRepository;
@@ -11,8 +9,11 @@ import org.dre0065.Event.EntityAddedEvent;
 import org.dre0065.Event.EntityOperationType;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.*;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.io.*;
 import org.springframework.stereotype.*;
+import org.springframework.transaction.annotation.*;
+import org.springframework.boot.context.event.*;
 import java.io.*;
 import java.util.*;
 
@@ -28,12 +29,15 @@ public class CoachService
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
+    @Transactional
     public void init() {loadUniqueCoachesFromJson();}
 
+    @Transactional
     public void loadUniqueCoachesFromJson()
     {
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setDateFormat(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
         try
         {
             ClassPathResource resource = new ClassPathResource("coaches.json");
@@ -53,6 +57,7 @@ public class CoachService
         catch(IOException e) {System.err.println("Error loading coaches from JSON: " + e.getMessage());}
     }
 
+    @Transactional
     public void saveAllCoaches(List<Coach> coaches)
     {
         List<Coach> coachesToSave = new ArrayList<>();
@@ -62,12 +67,16 @@ public class CoachService
             coachesToSave.add(coachBuilt);
         }
         coachRepository.saveAll(coachesToSave);
-        for(Coach savedCoach : coachesToSave) {eventPublisher.publishEvent(new EntityAddedEvent(this, savedCoach, EntityOperationType.CREATE));}
+        for(Coach savedCoach : coachesToSave) eventPublisher.publishEvent(new EntityAddedEvent(this, savedCoach, EntityOperationType.CREATE));
     }
 
+    @Transactional(readOnly = true)
     public List<Coach> getAllCoaches() {return coachRepository.findAll();}
+
+    @Transactional(readOnly = true)
     public Coach getCoachByName(String firstName, String lastName) {return coachRepository.findByFirstNameAndLastName(firstName, lastName).orElse(null);}
 
+    @Transactional
     public void deleteCoachById(int id)
     {
         Optional<Coach> coachOpt = coachRepository.findById(id);
@@ -80,6 +89,7 @@ public class CoachService
         else throw new RuntimeException("Coach with ID " + id + " not found!");
     }
 
+    @Transactional
     public String updateCoachById(int id, Coach updatedCoach)
     {
         Optional<Coach> existingCoachOpt = coachRepository.findById(id);
@@ -96,6 +106,7 @@ public class CoachService
         else return "Coach with ID " + id + " not found!";
     }
 
+    @Transactional
     public boolean hasDependencies(int coachId)
     {
         Optional<Coach> coach = coachRepository.findById(coachId);
@@ -116,5 +127,6 @@ public class CoachService
         else throw new RuntimeException("Coach with ID " + coachId + " not found!");
     }
 
+    @Transactional(readOnly = true)
     public Coach getCoachById(int id) {return coachRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Coach not found with ID: " + id));}
 }

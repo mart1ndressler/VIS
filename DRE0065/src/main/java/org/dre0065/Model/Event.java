@@ -39,7 +39,7 @@ public class Event
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Fight> fights = new HashSet<>();
 
-    protected Event() {}
+    public Event() {}
 
     public static Event createEvent(String eventName, String mmaOrganization, Date startOfEvent, Date endOfEvent, String location)
     {

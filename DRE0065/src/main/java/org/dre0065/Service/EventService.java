@@ -2,15 +2,17 @@ package org.dre0065.Service;
 
 import com.fasterxml.jackson.core.type.*;
 import com.fasterxml.jackson.databind.*;
-import jakarta.annotation.*;
 import org.dre0065.Model.Event;
 import org.dre0065.Repository.EventRepository;
 import org.dre0065.Event.EntityAddedEvent;
 import org.dre0065.Event.EntityOperationType;
 import org.springframework.beans.factory.annotation.*;
-import org.springframework.context.*;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.io.*;
 import org.springframework.stereotype.*;
+import org.springframework.transaction.annotation.*;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import java.io.*;
 import java.util.*;
 
@@ -23,9 +25,11 @@ public class EventService
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
+    @Transactional
     public void init() {loadUniqueEventsFromJson();}
 
+    @Transactional
     public void loadUniqueEventsFromJson()
     {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -50,6 +54,7 @@ public class EventService
         catch(IOException e) {System.err.println("Error loading events from JSON: " + e.getMessage());}
     }
 
+    @Transactional
     public void saveAllEvents(List<Event> events)
     {
         List<Event> eventsToSave = new ArrayList<>();
@@ -62,8 +67,10 @@ public class EventService
         for(Event savedEvent : eventsToSave) eventPublisher.publishEvent(new EntityAddedEvent(this, savedEvent, EntityOperationType.CREATE));
     }
 
+    @Transactional(readOnly = true)
     public List<Event> getAllEvents() {return eventRepository.findAll();}
 
+    @Transactional(readOnly = true)
     public Event getEventByName(String eventName)
     {
         List<Event> events = eventRepository.findByEventName(eventName);
@@ -71,6 +78,7 @@ public class EventService
         return events.get(0);
     }
 
+    @Transactional
     public String updateEventById(int id, Event updatedEvent)
     {
         Optional<Event> existingEventOpt = eventRepository.findById(id);
@@ -89,6 +97,7 @@ public class EventService
         else return "Event with ID " + id + " not found!";
     }
 
+    @Transactional
     public void deleteEventById(int id)
     {
         Optional<Event> eventOpt = eventRepository.findById(id);
